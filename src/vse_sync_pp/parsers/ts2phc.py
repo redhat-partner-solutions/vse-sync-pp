@@ -6,10 +6,10 @@ import re
 from collections import namedtuple
 from decimal import Decimal
 
-class TimeError():
-    """Parse time error from a ts2phc log message"""
-    id_ = 'ts2phc/time-error'
-    elems = ('timestamp', 'interface', 'terror', 'state')
+class TimeOffset():
+    """Parse time offset from a ts2phc log message"""
+    id_ = 'ts2phc/time-offset'
+    elems = ('timestamp', 'interface', 'toffset', 'state')
     parsed = namedtuple('Parsed', elems)
     @staticmethod
     def build_regexp(interface=None):
@@ -23,14 +23,14 @@ class TimeError():
             r'\[ts2phc\.0\..*\]',
             fr'({interface})' if interface else r'(\S+)', # interface
             r'master offset\s*',
-            r'(-?[0-9]+)', # time error
+            r'(-?[0-9]+)', # time offset
             r'(\S+)', # state
             r'.*$',
         ))
     def __init__(self, interface=None):
         self._regexp = re.compile(self.build_regexp(interface))
     def parse(self, line):
-        """Parse time error from `line`.
+        """Parse time offset from `line`.
 
         On success, return a :attr:`parsed` tuple. Otherwise, return None.
         """

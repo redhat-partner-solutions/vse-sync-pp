@@ -13,7 +13,7 @@ from .parsers import ts2phc
 
 PARSERS = {
     cls.id_: cls for cls in (
-        ts2phc.TimeError,
+        ts2phc.TimeOffset,
     )
 }
 
