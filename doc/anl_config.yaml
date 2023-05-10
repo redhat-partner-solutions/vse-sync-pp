@@ -1,0 +1,18 @@
+---
+dataInput:
+ offline_path: "/home/redhat/data" 
+
+analyzer:
+  maxTransient: 300
+  minSteady: 3600  
+  classes:
+    - maskPRTC: "PRTC-B"
+    - maskClock: "Class-C"
+
+  clockTargets:
+    - "gnss"
+    - "tgm"
+    - "tbc"
+
+observability:
+  type: local
