@@ -38,13 +38,31 @@ To plot already parsed (canonical) data:
 
     python3 -m vse_sync_pp.plot --canonical <filename> <parser> <image>
 
+### Analyze unfiltered log data
+
+To see the analyzers available:
+
+    python3 -m vse_sync_pp.analyze --help
+
+To analyze data from existing log file:
+
+    python3 -m vse_sync_pp.analyze <filename> <analyzer>
+
+To analyze data presented on stdin:
+
+    python3 -m vse_sync_pp.analyze - <analyzer>
+
+To analyze already parsed (canonical) data:
+
+    python3 -m vse_sync_pp.analyze --canonical <filename> <analyzer>
+
 ## Contributing
 
 ### Parsers
 
 Log file parsers are contributed into `src/vse_sync_pp/parsers/`.
 
-Each log file parser must be represented by a separate class that...
+Each log file parser must be represented by a separate class that:
 
 * is provided in an appropriate module, with module named by:
     * user space process;
@@ -53,3 +71,14 @@ Each log file parser must be represented by a separate class that...
 * is registered in `vse_sync_pp.parse.PARSERS`
 * has unit test cases built by class `ParserTestBuilder`
     * (`tests/vse_sync_pp/parsers/test_parser.py`)
+
+### Analyzers
+
+Log file analyzers are contributed into `src/vse_sync_pp/analyzers/`.
+
+Each log file analyzer myst be represented by a separate class that:
+
+* is provided in an appropriate module
+* is registered in `vse_sync_pp.analyze.ANALYZERS`
+* has unit test cases built by class `AnalyzerTestBuilder`
+    * (`tests/vse_sync_pp/analyzers/test_analyzer.py`)
