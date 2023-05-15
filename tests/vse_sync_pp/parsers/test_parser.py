@@ -14,7 +14,8 @@ class ParserTestBuilder(type):
     `id_` - the expected value of parser attribute `id_`
     `elems` - the expected value of parser attribute `elems`
     `accept` - a sequence of 2-tuples (line, expect) the parser must accept
-    `reject` - a sequence of lines the parser must reject
+    `reject` - a sequence of lines the parser must reject with ValueError
+    `discard` - a sequence of lines the parser must discard
     """
     def __new__(cls, name, bases, dct):
         constructor = dct['constructor']
@@ -35,6 +36,10 @@ class ParserTestBuilder(type):
             'test_reject': cls.make_test_reject(
                 constructor, fqname,
                 dct['reject'],
+            ),
+            'test_discard': cls.make_test_discard(
+                constructor, fqname,
+                dct['discard'],
             ),
         })
         return super().__new__(cls, name, bases, dct)
@@ -79,7 +84,18 @@ class ParserTestBuilder(type):
         def method(self, line):
             """Test parser rejects line"""
             parser = constructor()
+            with self.assertRaises(ValueError):
+                parser.parse(line)
+        method.__doc__ = f'Test {fqname} rejects line'
+        return method
+    @staticmethod
+    def make_test_discard(constructor, fqname, discard):
+        """Make a function testing parser discards line"""
+        @params(*discard)
+        def method(self, line):
+            """Test parser discards line"""
+            parser = constructor()
             parsed = parser.parse(line)
             self.assertIsNone(parsed)
-        method.__doc__ = f'Test {fqname} rejects line'
+        method.__doc__ = f'Test {fqname} discards line'
         return method

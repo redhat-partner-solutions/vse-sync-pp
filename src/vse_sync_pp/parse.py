@@ -9,10 +9,12 @@ from contextlib import nullcontext
 import json
 from decimal import Decimal
 
+from .parsers import dpll
 from .parsers import ts2phc
 
 PARSERS = {
     cls.id_: cls for cls in (
+        dpll.PhaseOffset,
         ts2phc.TimeOffset,
     )
 }
