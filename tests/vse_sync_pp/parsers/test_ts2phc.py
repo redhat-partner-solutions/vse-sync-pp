@@ -22,6 +22,7 @@ class TestTimeOffset(TestCase, metaclass=ParserTestBuilder):
             (Decimal('681011.839'), 'ens7f1', 0, 's2'),
         ),
     )
-    reject = (
+    reject = ()
+    discard = (
         'foo bar baz',
     )
