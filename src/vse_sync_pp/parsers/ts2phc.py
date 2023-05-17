@@ -6,10 +6,13 @@ import re
 from collections import namedtuple
 from decimal import Decimal
 
-class TimeOffset():
+from .parser import Parser
+
+class TimeOffset(Parser):
     """Parse time offset from a ts2phc log message"""
     id_ = 'ts2phc/time-offset'
     elems = ('timestamp', 'interface', 'toffset', 'state')
+    y_name = 'toffset'
     parsed = namedtuple('Parsed', elems)
     @staticmethod
     def build_regexp(interface=None):
@@ -28,18 +31,24 @@ class TimeOffset():
             r'.*$',
         ))
     def __init__(self, interface=None):
+        super().__init__()
         self._regexp = re.compile(self.build_regexp(interface))
-    def parse(self, line):
-        """Parse time offset from `line`.
-
-        On success, return a :attr:`parsed` tuple. Otherwise, return None.
-        """
+    def make_parsed(self, elems):
+        if len(elems) != len(self.elems):
+            raise ValueError(elems)
+        return self.parsed(
+            Decimal(elems[0]),
+            str(elems[1]),
+            int(elems[2]),
+            str(elems[3]),
+        )
+    def parse_line(self, line):
         matched = self._regexp.match(line)
         if matched:
-            return self.parsed(
-                Decimal(matched.group(1)),
+            return self.make_parsed((
+                matched.group(1),
                 matched.group(2),
-                int(matched.group(3)),
+                matched.group(3),
                 matched.group(4),
-            )
+            ))
         return None
