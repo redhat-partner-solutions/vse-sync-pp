@@ -31,3 +31,13 @@ class TestPhaseOffset(TestCase, metaclass=ParserTestBuilder):
         '1876878.28,3,3,quux',
     )
     discard = ()
+    file = (
+        '\n'.join((
+            '1876878.28,3,3,-0.79',
+            '1876879.29,3,3,-1.05',
+        )),
+        (
+            (Decimal('1876878.28'), 3, 3, Decimal('-0.79')),
+            (Decimal('1876879.29'), 3, 3, Decimal('-1.05')),
+        ),
+    )

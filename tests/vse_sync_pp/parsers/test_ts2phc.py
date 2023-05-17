@@ -26,3 +26,18 @@ class TestTimeOffset(TestCase, metaclass=ParserTestBuilder):
     discard = (
         'foo bar baz',
     )
+    file = (
+        '\n'.join((
+            'foo',
+            'ts2phc[847914.839]: [ts2phc.0.config] '
+            'ens7f1 master offset          1 s2 freq      +1',
+            'bar',
+            'ts2phc[847915.839]: [ts2phc.0.config] '
+            'ens7f1 master offset          0 s2 freq      -0',
+            'baz',
+        )),
+        (
+            (Decimal('847914.839'), 'ens7f1', 1, 's2'),
+            (Decimal('847915.839'), 'ens7f1', 0, 's2'),
+        ),
+    )
