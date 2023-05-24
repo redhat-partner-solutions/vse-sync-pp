@@ -44,8 +44,8 @@ class ParserTestBuilder(type):
 
     Specify this class as metaclass and provide:
     `constructor` - a callable returning the parser to test
-    `id_` - the expected value of parser attribute `id_`
-    `elems` - the expected value of parser attribute `elems`
+    `id_` - the expected value of parser class attribute `id_`
+    `elems` - the expected value of parser class attribute `elems`
     `accept` - a sequence of 2-tuples (line, expect) the parser must accept
     `reject` - a sequence of lines the parser must reject with ValueError
     `discard` - a sequence of lines the parser must discard
@@ -93,23 +93,21 @@ class ParserTestBuilder(type):
     # make functions for use as TestCase methods
     @staticmethod
     def make_test_id(constructor, fqname, id_):
-        """Make a function testing id_ attribute value"""
+        """Make a function testing id_ class attribute value"""
         def method(self):
-            """Test parser id_ attribute value"""
-            parser = constructor()
-            self.assertEqual(parser.id_, id_)
-        method.__doc__ = f'Test {fqname} id_ attribute value'
+            """Test parser id_ class attribute value"""
+            self.assertEqual(constructor.id_, id_)
+        method.__doc__ = f'Test {fqname} id_ class attribute value'
         return method
     @staticmethod
     def make_test_elems(constructor, fqname, elems):
-        """Make a function testing elems attribute value"""
+        """Make a function testing elems class attribute value"""
         def method(self):
-            """Test parser elems attribute value"""
-            parser = constructor()
-            self.assertEqual(parser.elems, elems)
+            """Test parser elems class attribute value"""
+            self.assertEqual(constructor.elems, elems)
             self.assertIn('timestamp', elems)
-            self.assertIn(parser.y_name, elems)
-        method.__doc__ = f'Test {fqname} elems attribute value'
+            self.assertIn(constructor.y_name, elems)
+        method.__doc__ = f'Test {fqname} elems class attribute value'
         return method
     @staticmethod
     def make_test_make_parsed(constructor, fqname, expect):

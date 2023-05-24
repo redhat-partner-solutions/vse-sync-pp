@@ -18,12 +18,14 @@ class PhaseOffsetTimeErrorAnalyzer(Analyzer):
     def test(self, data):
         pho_min = data.phaseoffset.min()
         pho_max = data.phaseoffset.max()
-        return max(abs(pho_min), abs(pho_max)) < 40
+        if max(abs(pho_min), abs(pho_max)) < 40:
+            return True
+        return False
     def explain(self, data):
         pho_min = data.phaseoffset.min()
         pho_max = data.phaseoffset.max()
         return {
-            'units': self._units,
+            'units': 'ns',
             'min': pho_min,
             'max': pho_max,
             'range': pho_max - pho_min,
