@@ -21,7 +21,7 @@ class PhaseOffset(Parser):
         except InvalidOperation as exc:
             raise ValueError(elems[0]) from exc
         try:
-            phaseoffset = float(elems[3])
+            phaseoffset = Decimal(elems[3])
         except InvalidOperation as exc:
             raise ValueError(elems[3]) from exc
         eecstate = int(elems[1])
