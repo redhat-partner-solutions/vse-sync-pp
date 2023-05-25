@@ -13,6 +13,7 @@ from .analyzers import ppsdpll
 ANALYZERS = {
     cls.id_: cls for cls in (
         ppsdpll.PhaseOffsetTimeErrorAnalyzer,
+        ppsdpll.PhaseOffsetConstantTimeErrorAnalyzer,
     )
 }
 
