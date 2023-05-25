@@ -8,7 +8,8 @@ from pandas import DataFrame
 
 class CollectionIsClosed(Exception):
     """Data Collection has been closed while collecting data"""
-    pass
+    # empty
+
 class Analyzer():
     """A base class providing common analyzer functionality
 
@@ -16,22 +17,21 @@ class Analyzer():
     list of column names to extract from collected rows of data.
     """
     cols = ()
-    def __init__(self, units='ns'):
+    def __init__(self):
         getter = attrgetter(*self.cols)
         if len(self.cols) > 1:
             self._row_builder = getter
         else:
             self._row_builder = lambda row: (getter(row),)
         self._rows = []
-        self._units = units
         self._data = None
     def collect(self, *rows):
         """Collect data from `rows`"""
         if self._rows is None:
             raise CollectionIsClosed()
         self._rows.extend([self._row_builder(r) for r in rows])
-    def prepare(self, rows):
-        """Prepare and return collected data `rows` for analysis"""
+    def prepare(self, rows): # pylint: disable=no-self-use
+        """Return collected data `rows` prepared for test and analysis"""
         return rows
     def close(self):
         """Close data collection"""
