@@ -18,7 +18,7 @@ class AnalyzerTestBuilder(type):
     `expect` - a sequence of 3-tuples (rows, result, analysis) the analyzer must
                produce
     """
-    def __new__(cls, name, bases, dct):
+    def __new__(cls, name, bases, dct): # pylint: disable=bad-mcs-classmethod-argument
         constructor = dct['constructor']
         fqname = make_fqname(constructor)
         dct.update({

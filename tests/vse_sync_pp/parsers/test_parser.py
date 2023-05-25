@@ -52,7 +52,7 @@ class ParserTestBuilder(type):
     `file` - a 2-tuple (lines, expect) the parser must parse `expect` from
              `lines` presented as a file object
     """
-    def __new__(cls, name, bases, dct):
+    def __new__(cls, name, bases, dct): # pylint: disable=bad-mcs-classmethod-argument
         constructor = dct['constructor']
         fqname = make_fqname(constructor)
         dct.update({
