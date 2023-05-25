@@ -8,11 +8,11 @@ from decimal import Decimal
 
 from .parser import Parser
 
-class TimeOffset(Parser):
-    """Parse time offset from a ts2phc log message"""
-    id_ = 'ts2phc/time-offset'
-    elems = ('timestamp', 'interface', 'toffset', 'state')
-    y_name = 'toffset'
+class TimeErrorParser(Parser):
+    """Parse time error from a ts2phc log message"""
+    id_ = 'ts2phc/time-error'
+    elems = ('timestamp', 'interface', 'terror', 'state')
+    y_name = 'terror'
     parsed = namedtuple('Parsed', elems)
     @staticmethod
     def build_regexp(interface=None):
@@ -26,7 +26,7 @@ class TimeOffset(Parser):
             r'\[ts2phc\.0\..*\]',
             fr'({interface})' if interface else r'(\S+)', # interface
             r'master offset\s*',
-            r'(-?[0-9]+)', # time offset
+            r'(-?[0-9]+)', # time error
             r'(\S+)', # state
             r'.*$',
         ))

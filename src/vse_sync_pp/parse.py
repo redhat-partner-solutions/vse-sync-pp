@@ -15,7 +15,7 @@ from .parsers import ts2phc
 PARSERS = {
     cls.id_: cls for cls in (
         dpll.PhaseOffset,
-        ts2phc.TimeOffset,
+        ts2phc.TimeErrorParser,
     )
 }
 
