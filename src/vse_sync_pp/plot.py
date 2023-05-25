@@ -12,7 +12,7 @@ from .common import open_input
 from .parse import PARSERS
 
 class Plotter():
-    """Rudimentary plotter of data values against timestamp offset"""
+    """Rudimentary plotter of data values against timestamp"""
     def __init__(self, y_name):
         self._x_name = 'timestamp'
         self._y_name = y_name
