@@ -3,7 +3,6 @@
 """Common analyzer functionality"""
 
 import yaml
-from operator import attrgetter
 
 from pandas import DataFrame
 
@@ -60,34 +59,28 @@ class CollectionIsClosed(Exception):
     # empty
 
 class Analyzer():
-    """A base class providing common analyzer functionality
-
-    Derived classes must override class attribute `cols`, specifying a
-    list of column names to extract from collected rows of data.
-    """
-    cols = ()
+    """A base class providing common analyzer functionality"""
     def __init__(self, config):
         self._config = config
-        getter = attrgetter(*self.cols)
-        if len(self.cols) > 1:
-            self._row_builder = getter
-        else:
-            self._row_builder = lambda row: (getter(row),)
         self._rows = []
         self._data = None
     def collect(self, *rows):
         """Collect data from `rows`"""
         if self._rows is None:
             raise CollectionIsClosed()
-        self._rows.extend([self._row_builder(r) for r in rows])
+        self._rows += rows
     def prepare(self, rows): # pylint: disable=no-self-use
-        """Return collected data `rows` prepared for test and analysis"""
-        return rows
+        """Return (columns, records) from collected data `rows`
+
+        `columns` is a sequence of column names
+        `records` is a sequence of rows prepared for test analysis
+        """
+        return (rows[0]._fields, rows)
     def close(self):
         """Close data collection"""
         if self._data is None:
-            records = self.prepare(self._rows)
-            self._data = DataFrame.from_records(records, columns=self.cols)
+            (columns, records) = self.prepare(self._rows)
+            self._data = DataFrame.from_records(records, columns=columns)
             self._rows = None
     @property
     def result(self):

@@ -4,23 +4,27 @@
 
 from .analyzer import Analyzer
 
-### TODO
-#prtc_b = 40
-#prtc_a = 100
-
 class PhaseOffsetTimeErrorAnalyzer(Analyzer):
     """Analyze DPLL phase offset time error"""
     id_ = 'ppsdpll/phase-offset-time-error'
     parser = 'dpll/phase-offset'
-    cols = ('phaseoffset',)
+    def __init__(self, config):
+        super().__init__(config)
+        # required system time output accuracy
+        accuracy = config.requirement('time-error-in-locked-mode/ns')
+        # exclusive upper bound on absolute time error for any sample
+        self._unacceptable = accuracy
     def prepare(self, rows):
-        return ((float(r[0]),) for r in rows)
+        return (
+            rows[0]._fields,
+            (r._replace(phaseoffset=float(r.phaseoffset)) for r in rows),
+        )
     def test(self, data):
         pho_min = data.phaseoffset.min()
         pho_max = data.phaseoffset.max()
-        if max(abs(pho_min), abs(pho_max)) < 40:
-            return True
-        return False
+        if self._unacceptable <= max(abs(pho_min), abs(pho_max)):
+            return False
+        return True
     def explain(self, data):
         pho_min = data.phaseoffset.min()
         pho_max = data.phaseoffset.max()
