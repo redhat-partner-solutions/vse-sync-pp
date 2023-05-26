@@ -8,11 +8,16 @@ from .common import open_input
 
 from .parse import PARSERS
 
-from .analyzers import ppsdpll
+from .analyzers.analyzer import Config
+from .analyzers import (
+    ppsdpll,
+    ts2phc,
+)
 
 ANALYZERS = {
     cls.id_: cls for cls in (
         ppsdpll.PhaseOffsetTimeErrorAnalyzer,
+        ts2phc.TimeErrorAnalyzer,
     )
 }
 
@@ -20,8 +25,12 @@ def main():
     """Print test analysis of data parsed from log messages to stdout"""
     aparser = ArgumentParser(description=main.__doc__)
     aparser.add_argument(
-        '-c', '--canonical', action='store_true',
+        '--canonical', action='store_true',
         help="parse canonical log data from input",
+    )
+    aparser.add_argument(
+        '--config',
+        help="YAML file specifying test requirements and parameters",
     )
     aparser.add_argument(
         'input',
@@ -32,7 +41,8 @@ def main():
         help="analyzer to run",
     )
     args = aparser.parse_args()
-    analyzer = ANALYZERS[args.analyzer]()
+    config = Config.from_yaml(args.config) if args.config else Config()
+    analyzer = ANALYZERS[args.analyzer](config)
     parser = PARSERS[analyzer.parser]()
     with open_input(args.input) as fid:
         method = parser.canonical if args.canonical else parser.parse

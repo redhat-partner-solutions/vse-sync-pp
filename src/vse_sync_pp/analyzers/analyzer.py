@@ -2,9 +2,58 @@
 
 """Common analyzer functionality"""
 
+import yaml
 from operator import attrgetter
 
 from pandas import DataFrame
+
+from ..requirements import REQUIREMENTS
+
+class Config():
+    """Analyzer configuration"""
+    def __init__(self, filename=None, requirements=None, parameters=None):
+        self._filename = filename
+        self._requirements = requirements
+        self._parameters = parameters
+    def _reason(self, reason):
+        """Return `reason`, extended if this config is from a file."""
+        if self._filename is None:
+            return reason
+        return reason + f' in config file {self._filename}'
+    def requirement(self, key):
+        """Return the value at `key` in this configuration's requirements.
+
+        Raise :class:`KeyError` if a value cannot be returned.
+        """
+        try:
+            return REQUIREMENTS[self._requirements][key]
+        except KeyError as exc:
+            if self._requirements is None:
+                reason = 'no requirements specified'
+            elif self._requirements not in REQUIREMENTS:
+                reason = f'unknown requirements {self._requirements}'
+            else:
+                reason = f'unknown requirement {key} in {self._requirements}'
+            raise KeyError(self._reason(reason)) from exc
+    def parameter(self, key):
+        """Return the value at `key` in this configuration's parameters.
+
+        Raise :class:`KeyError` if a value cannot be returned.
+        """
+        try:
+            return self._parameters[key]
+        except TypeError as exc:
+            reason = 'no parameters specified'
+            raise KeyError(self._reason(reason)) from exc
+        except KeyError as exc:
+            reason = f'unknown parameter {key}'
+            raise KeyError(self._reason(reason)) from exc
+    @classmethod
+    def from_yaml(cls, filename, encoding='utf-8'):
+        """Build configuration from YAML file at `filename`"""
+        with open(filename, encoding=encoding) as fid:
+            dct = dict(yaml.safe_load(fid.read()))
+        return cls(filename, dct.get('requirements'), dct.get('parameters'))
 
 class CollectionIsClosed(Exception):
     """Data Collection has been closed while collecting data"""
@@ -17,7 +66,8 @@ class Analyzer():
     list of column names to extract from collected rows of data.
     """
     cols = ()
-    def __init__(self):
+    def __init__(self, config):
+        self._config = config
         getter = attrgetter(*self.cols)
         if len(self.cols) > 1:
             self._row_builder = getter
