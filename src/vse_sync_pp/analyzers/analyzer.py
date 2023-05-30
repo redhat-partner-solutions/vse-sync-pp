@@ -74,8 +74,10 @@ class Analyzer():
 
         `columns` is a sequence of column names
         `records` is a sequence of rows prepared for test analysis
+
+        If `records` is an empty sequence, then `columns` is also empty.
         """
-        return (rows[0]._fields, rows)
+        return (rows[0]._fields, rows) if rows else ((), ())
     def close(self):
         """Close data collection"""
         if self._data is None:

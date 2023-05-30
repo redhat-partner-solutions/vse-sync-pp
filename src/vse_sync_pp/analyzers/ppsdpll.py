@@ -15,10 +15,9 @@ class PhaseOffsetTimeErrorAnalyzer(Analyzer):
         # exclusive upper bound on absolute time error for any sample
         self._unacceptable = accuracy
     def prepare(self, rows):
-        return (
-            rows[0]._fields,
-            (r._replace(phaseoffset=float(r.phaseoffset)) for r in rows),
-        )
+        return super().prepare([
+            r._replace(phaseoffset=float(r.phaseoffset)) for r in rows
+        ])
     def test(self, data):
         pho_min = data.phaseoffset.min()
         pho_max = data.phaseoffset.max()

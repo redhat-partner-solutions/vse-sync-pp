@@ -21,6 +21,25 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
     id_ = 'ts2phc/time-error'
     parser = 'ts2phc/time-error'
     expect = (
+        # no data
+        (
+            'G.8272/PRTC-A',
+            {
+                'time-error-limit/%': 100,
+                'transient-period/s': 6,
+                'min-test-duration/s': 1,
+            },
+            (
+                TERR(Decimal(0), 0, 's2'),
+                TERR(Decimal(1), 0, 's2'),
+                TERR(Decimal(2), 0, 's2'),
+                TERR(Decimal(3), 0, 's2'),
+                TERR(Decimal(4), 0, 's2'),
+                TERR(Decimal(5), 0, 's2'),
+            ),
+            False,
+            {},
+        ),
         # loss of lock
         (
             'G.8272/PRTC-A',

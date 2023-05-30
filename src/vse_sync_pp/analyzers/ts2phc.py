@@ -29,6 +29,9 @@ class TimeErrorAnalyzer(Analyzer):
             idx += 1
         return super().prepare(rows[idx:])
     def test(self, data):
+        # failure if there is no data
+        if len(data) == 0:
+            return False
         # failure if state indicates loss of lock
         if frozenset(data.state.unique()) != {'s2'}:
             return False
@@ -45,6 +48,8 @@ class TimeErrorAnalyzer(Analyzer):
             return False
         return True
     def explain(self, data):
+        if len(data) == 0:
+            return {}
         terr_min = data.terror.min()
         terr_max = data.terror.max()
         return {
