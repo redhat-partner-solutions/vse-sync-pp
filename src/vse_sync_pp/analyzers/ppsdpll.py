@@ -4,7 +4,7 @@
 
 from .analyzer import Analyzer
 
-class PhaseOffsetTimeErrorAnalyzer(Analyzer):
+class TimeErrorAnalyzer(Analyzer):
     """Analyze DPLL phase offset time error"""
     id_ = 'ppsdpll/phase-offset-time-error'
     parser = 'dpll/phase-offset'

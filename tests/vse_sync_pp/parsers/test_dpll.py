@@ -6,14 +6,14 @@ from unittest import TestCase
 from decimal import Decimal
 
 from vse_sync_pp.parsers.dpll import (
-    PhaseOffset,
+    TimeErrorParser,
 )
 
 from .test_parser import ParserTestBuilder
 
-class TestPhaseOffset(TestCase, metaclass=ParserTestBuilder):
+class TestTimeErrorParser(TestCase, metaclass=ParserTestBuilder):
     """Test cases for vse_sync_pp.parsers.dpll.PhaseOffset"""
-    constructor = PhaseOffset
+    constructor = TimeErrorParser
     id_ = 'dpll/phase-offset'
     elems = ('timestamp', 'eecstate', 'phasestate', 'phaseoffset')
     accept = (

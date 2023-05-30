@@ -7,7 +7,7 @@ from decimal import (Decimal, InvalidOperation)
 
 from .parser import Parser
 
-class PhaseOffset(Parser):
+class TimeErrorParser(Parser):
     """Parse phase offset from a dpll CSV sample"""
     id_ = 'dpll/phase-offset'
     elems = ('timestamp', 'eecstate', 'phasestate', 'phaseoffset')

@@ -7,16 +7,16 @@ from collections import namedtuple
 from decimal import Decimal
 
 from vse_sync_pp.analyzers.ppsdpll import (
-    PhaseOffsetTimeErrorAnalyzer
+    TimeErrorAnalyzer
 )
 
 from .test_analyzer import AnalyzerTestBuilder
 
 DPO = namedtuple('DPO', ('phaseoffset',))
 
-class TestPhaseOffsetTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
-    """Test cases for vse_sync_pp.analyzers.ppsdpll.PhaseOffsetTimeErrorAnalyzer"""
-    constructor = PhaseOffsetTimeErrorAnalyzer
+class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
+    """Test cases for vse_sync_pp.analyzers.ppsdpll.TimeErrorAnalyzer"""
+    constructor = TimeErrorAnalyzer
     id_ = 'ppsdpll/phase-offset-time-error'
     parser = 'dpll/phase-offset'
     expect = (
