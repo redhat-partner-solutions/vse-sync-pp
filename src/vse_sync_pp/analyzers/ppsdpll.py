@@ -12,8 +12,14 @@ class PhaseOffsetTimeErrorAnalyzer(Analyzer):
         super().__init__(config)
         # required system time output accuracy
         accuracy = config.requirement('time-error-in-locked-mode/ns')
+        # limit on inaccuracy at observation point
+        limit = config.parameter('time-error-limit/%')
         # exclusive upper bound on absolute time error for any sample
-        self._unacceptable = accuracy
+        self._unacceptable = accuracy * limit / 100
+        # samples in the initial transient period are ignored
+        self._transient = config.parameter('transient-period/s')
+        # minimum test duration for a valid test
+        self._duration = config.parameter('min-test-duration/s')
     def prepare(self, rows):
         return super().prepare([
             r._replace(phaseoffset=float(r.phaseoffset)) for r in rows
