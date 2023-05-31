@@ -3,31 +3,15 @@
 """Test cases for vse_sync_pp.parsers"""
 
 import json
-from decimal import Decimal
 from io import StringIO
 
 from unittest import TestCase
 from nose2.tools import params
 
-from vse_sync_pp.parsers.parser import (
-    JsonEncoder,
-    Parser,
-)
+from vse_sync_pp.common import JsonEncoder
+from vse_sync_pp.parsers.parser import Parser
 
 from .. import make_fqname
-
-class TestJsonEncoder(TestCase):
-    """Test cases for vse_sync_pp.parsers.parser.JsonEncoder"""
-    def test_success(self):
-        """Test vse_sync_pp.parsers.parser.JsonEncoder encodes Decimal"""
-        self.assertEqual(
-            json.dumps(Decimal('123.456'), cls=JsonEncoder),
-            '123.456',
-        )
-    def test_error(self):
-        """Test vse_sync_pp.parsers.parser.JsonEncoder rejects instance"""
-        with self.assertRaises(TypeError):
-            json.dumps(self, cls=JsonEncoder)
 
 class TestParser(TestCase):
     """Test cases for vse_sync_pp.parsers.parser.Parser"""

@@ -5,14 +5,6 @@
 import json
 from decimal import Decimal
 
-class JsonEncoder(json.JSONEncoder):
-    """A JSON encoder accepting :class:`Decimal` values"""
-    def default(self, o):
-        """Return a commonly serializable value from `o`"""
-        if isinstance(o, Decimal):
-            return float(o)
-        return super().default(o)
-
 class Parser():
     """A base class providing common parser functionality"""
     def make_parsed(self, elems): # pylint: disable=no-self-use

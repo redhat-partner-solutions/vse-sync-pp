@@ -3,7 +3,6 @@
 """Common analyzer functionality"""
 
 import yaml
-from operator import attrgetter
 
 from pandas import DataFrame
 
@@ -56,52 +55,85 @@ class Config():
         return cls(filename, dct.get('requirements'), dct.get('parameters'))
 
 class CollectionIsClosed(Exception):
-    """Data Collection has been closed while collecting data"""
+    """Data collection was closed while collecting data"""
     # empty
 
 class Analyzer():
-    """A base class providing common analyzer functionality
-
-    Derived classes must override class attribute `cols`, specifying a
-    list of column names to extract from collected rows of data.
-    """
-    cols = ()
+    """A base class providing common analyzer functionality"""
     def __init__(self, config):
         self._config = config
-        getter = attrgetter(*self.cols)
-        if len(self.cols) > 1:
-            self._row_builder = getter
-        else:
-            self._row_builder = lambda row: (getter(row),)
         self._rows = []
         self._data = None
+        self._result = None
+        self._reason = None
+        self._analysis = None
     def collect(self, *rows):
         """Collect data from `rows`"""
         if self._rows is None:
             raise CollectionIsClosed()
-        self._rows.extend([self._row_builder(r) for r in rows])
+        self._rows += rows
     def prepare(self, rows): # pylint: disable=no-self-use
-        """Return collected data `rows` prepared for test and analysis"""
-        return rows
+        """Return (columns, records) from collected data `rows`
+
+        `columns` is a sequence of column names
+        `records` is a sequence of rows prepared for test analysis
+
+        If `records` is an empty sequence, then `columns` is also empty.
+        """
+        return (rows[0]._fields, rows) if rows else ((), ())
     def close(self):
         """Close data collection"""
         if self._data is None:
-            records = self.prepare(self._rows)
-            self._data = DataFrame.from_records(records, columns=self.cols)
+            (columns, records) = self.prepare(self._rows)
+            self._data = DataFrame.from_records(records, columns=columns)
             self._rows = None
+    def _test(self):
+        """Close data collection and test collected data"""
+        if self._result is None:
+            self.close()
+            (self._result, self._reason) = self.test(self._data)
     @property
     def result(self):
-        """Return True if collected data passes this analyzer's test"""
-        self.close()
-        return self.test(self._data)
+        """The boolean result from this analyzer's test of the collected data"""
+        self._test()
+        return self._result
+    @property
+    def reason(self):
+        """A string qualifying :attr:`result` (or None if unqualified)"""
+        self._test()
+        return self._reason
     @property
     def analysis(self):
-        """Return a machine-readable analysis of the collected data"""
-        self.close()
-        return self.explain(self._data)
+        """A structured analysis of the collected data"""
+        if self._analysis is None:
+            self.close()
+            self._analysis = self.explain(self._data)
+        return self._analysis
+    @staticmethod
+    def _statistics(data, units, ndigits=3):
+        """Return a dict of statistics for `data`, rounded to `ndigits`"""
+        def _round(val):
+            """Return `val` as native Python type, rounded to `ndigits`"""
+            return round(val.item(), ndigits)
+        min_ = data.min()
+        max_ = data.max()
+        return {
+            'units': units,
+            'min': _round(min_),
+            'max': _round(max_),
+            'range': _round(max_ - min_),
+            'mean': _round(data.mean()),
+            'stddev': _round(data.std()),
+            'variance': _round(data.var()),
+        }
     def test(self, data):
-        """A boolean function testing if `data` passes this analyzer"""
+        """This analyzer's test of the collected `data`.
+
+        Return a 2-tuple (result, reason). Boolean `result` indicates test
+        pass/fail. String `reason` qualifies `result` (or None is `result`
+        if unqualified).
+        """
         raise NotImplementedError
     def explain(self, data):
-        """Return a machine-readable analysis of `data`"""
+        """Return a structured analysis of the collected `data`"""
         raise NotImplementedError
