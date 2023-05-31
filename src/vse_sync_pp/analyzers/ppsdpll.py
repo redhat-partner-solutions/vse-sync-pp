@@ -25,12 +25,21 @@ class TimeErrorAnalyzer(Analyzer):
             r._replace(phaseoffset=float(r.phaseoffset)) for r in rows
         ])
     def test(self, data):
+        if len(data) == 0:
+            return (False, "no data")
         pho_min = data.phaseoffset.min()
         pho_max = data.phaseoffset.max()
         if self._unacceptable <= max(abs(pho_min), abs(pho_max)):
             return (False, None)
+        if data.iloc[-1].timestamp - data.iloc[0].timestamp < self._duration:
+            return (False, "short test duration")
+        if len(data) - 1 < self._duration:
+            return (False, "short test samples")
         return (True, None)
     def explain(self, data):
+        if len(data) == 0:
+            return {}
         return {
+            'duration': data.iloc[-1].timestamp - data.iloc[0].timestamp,
             'phaseoffset': self._statistics(data.phaseoffset, 'ns'),
         }
