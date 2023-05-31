@@ -25,6 +25,18 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             'requirements': 'G.8272/PRTC-A',
             'parameters': {
                 'time-error-limit/%': 100,
+                'transient-period/s': 1,
+                'min-test-duration/s': 1,
+            },
+            'rows': (),
+            'result': False,
+            'reason': "no data",
+            'analysis': {},
+        },
+        {
+            'requirements': 'G.8272/PRTC-A',
+            'parameters': {
+                'time-error-limit/%': 100,
                 'transient-period/s': 6,
                 'min-test-duration/s': 1,
             },

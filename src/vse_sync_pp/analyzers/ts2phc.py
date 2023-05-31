@@ -21,12 +21,16 @@ class TimeErrorAnalyzer(Analyzer):
         # minimum test duration for a valid test
         self._duration = config.parameter('min-test-duration/s')
     def prepare(self, rows):
-        tstart = rows[0].timestamp + self._transient
         idx = 0
-        while idx < len(rows):
-            if tstart <= rows[idx].timestamp:
-                break
-            idx += 1
+        try:
+            tstart = rows[0].timestamp + self._transient
+        except IndexError:
+            pass
+        else:
+            while idx < len(rows):
+                if tstart <= rows[idx].timestamp:
+                    break
+                idx += 1
         return super().prepare(rows[idx:])
     def test(self, data):
         if len(data) == 0:
