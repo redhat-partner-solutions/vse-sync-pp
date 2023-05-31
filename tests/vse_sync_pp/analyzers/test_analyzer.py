@@ -129,14 +129,7 @@ class AnalyzerTestBuilder(type):
     `constructor` - a callable returning the analyzer to test
     `id_` - the expected value of analyzer class attribute `id_`
     `parser` - the expected value of analyzer class attribute `parser`
-    `expect` - a sequence of (
-                    requirements,
-                    parameters,
-                    rows,
-                    result,
-                    reason,
-                    analysis,
-                )
+    `expect` - dict of requirements, parameters, rows, result, reason, analysis
                giving test config, input data, expected outputs
     """
     def __new__(cls, name, bases, dct): # pylint: disable=bad-mcs-classmethod-argument
@@ -179,13 +172,14 @@ class AnalyzerTestBuilder(type):
         """Make a function testing analyzer test result and analysis"""
         # pylint: disable=too-many-arguments
         @params(*expect)
-        def method(
-                self,
-                requirements, parameters,
-                rows,
-                result, reason, analysis,
-            ):
+        def method(self, dct):
             """Test analyzer test result and analysis"""
+            requirements = dct['requirements']
+            parameters = dct['parameters']
+            rows = dct['rows']
+            result = dct['result']
+            reason = dct['reason']
+            analysis = dct['analysis']
             config = Config(None, requirements, parameters)
             analyzer = constructor(config)
             analyzer.collect(*rows)

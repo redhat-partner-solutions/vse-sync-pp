@@ -20,17 +20,17 @@ class TestPhaseOffsetTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
     id_ = 'ppsdpll/phase-offset-time-error'
     parser = 'dpll/phase-offset'
     expect = (
-        (
-            'G.8272/PRTC-A',
-            None,
-            (
+        {
+            'requirements': 'G.8272/PRTC-A',
+            'parameters': None,
+            'rows': (
                 DPO(Decimal(1)),
                 DPO(Decimal(1)),
                 DPO(Decimal(1)),
             ),
-            True,
-            None,
-            {
+            'result': True,
+            'reason': None,
+            'analysis': {
                 'phaseoffset': {
                     'units': 'ns',
                     'min': 1,
@@ -41,18 +41,18 @@ class TestPhaseOffsetTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                     'variance': 0,
                 },
             },
-        ),
-        (
-            'G.8272/PRTC-B',
-            None,
-            (
+        },
+        {
+            'requirements': 'G.8272/PRTC-B',
+            'parameters': None,
+            'rows': (
                 DPO(Decimal(1)),
                 DPO(Decimal(1)),
                 DPO(Decimal(1)),
             ),
-            True,
-            None,
-            {
+            'result': True,
+            'reason': None,
+            'analysis': {
                 'phaseoffset': {
                     'units': 'ns',
                     'min': 1,
@@ -63,18 +63,18 @@ class TestPhaseOffsetTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                     'variance': 0,
                 },
             },
-        ),
-        (
-            'G.8272/PRTC-A',
-            None,
-            (
+        },
+        {
+            'requirements': 'G.8272/PRTC-A',
+            'parameters': None,
+            'rows': (
                 DPO(Decimal(-40)),
                 DPO(Decimal(-39)),
                 DPO(Decimal(-38)),
             ),
-            True,
-            None,
-            {
+            'result': True,
+            'reason': None,
+            'analysis': {
                 'phaseoffset': {
                     'units': 'ns',
                     'min': -40,
@@ -85,18 +85,18 @@ class TestPhaseOffsetTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                     'variance': 1,
                 },
             },
-        ),
-        (
-            'G.8272/PRTC-B',
-            None,
-            (
+        },
+        {
+            'requirements': 'G.8272/PRTC-B',
+            'parameters': None,
+            'rows': (
                 DPO(Decimal(-40)),
                 DPO(Decimal(-39)),
                 DPO(Decimal(-38)),
             ),
-            False,
-            None,
-            {
+            'result': False,
+            'reason': None,
+            'analysis': {
                 'phaseoffset': {
                     'units': 'ns',
                     'min': -40,
@@ -107,18 +107,18 @@ class TestPhaseOffsetTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                     'variance': 1,
                 },
             },
-        ),
-        (
-            'G.8272/PRTC-A',
-            None,
-            (
+        },
+        {
+            'requirements': 'G.8272/PRTC-A',
+            'parameters': None,
+            'rows': (
                 DPO(Decimal(38)),
                 DPO(Decimal(39)),
                 DPO(Decimal(40)),
             ),
-            True,
-            None,
-            {
+            'result': True,
+            'reason': None,
+            'analysis': {
                 'phaseoffset': {
                     'units': 'ns',
                     'min': 38,
@@ -129,18 +129,18 @@ class TestPhaseOffsetTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                     'variance': 1,
                 },
             },
-        ),
-        (
-            'G.8272/PRTC-B',
-            None,
-            (
+        },
+        {
+            'requirements': 'G.8272/PRTC-B',
+            'parameters': None,
+            'rows': (
                 DPO(Decimal(38)),
                 DPO(Decimal(39)),
                 DPO(Decimal(40)),
             ),
-            False,
-            None,
-            {
+            'result': False,
+            'reason': None,
+            'analysis': {
                 'phaseoffset': {
                     'units': 'ns',
                     'min': 38,
@@ -151,5 +151,5 @@ class TestPhaseOffsetTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                     'variance': 1,
                 },
             },
-        ),
+        },
     )

@@ -21,14 +21,14 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
     id_ = 'ts2phc/time-error'
     parser = 'ts2phc/time-error'
     expect = (
-        (
-            'G.8272/PRTC-A',
-            {
+        {
+            'requirements': 'G.8272/PRTC-A',
+            'parameters': {
                 'time-error-limit/%': 100,
                 'transient-period/s': 6,
                 'min-test-duration/s': 1,
             },
-            (
+            'rows': (
                 TERR(Decimal(0), 0, 's2'),
                 TERR(Decimal(1), 0, 's2'),
                 TERR(Decimal(2), 0, 's2'),
@@ -36,18 +36,18 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                 TERR(Decimal(4), 0, 's2'),
                 TERR(Decimal(5), 0, 's2'),
             ),
-            False,
-            "no data",
-            {},
-        ),
-        (
-            'G.8272/PRTC-A',
-            {
+            'result': False,
+            'reason': "no data",
+            'analysis': {},
+        },
+        {
+            'requirements': 'G.8272/PRTC-A',
+            'parameters': {
                 'time-error-limit/%': 100,
                 'transient-period/s': 1,
                 'min-test-duration/s': 4,
             },
-            (
+            'rows': (
                 TERR(Decimal(0), 0, 's2'),
                 # state s1 causes failure
                 TERR(Decimal(1), 0, 's1'),
@@ -56,9 +56,9 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                 TERR(Decimal(4), 0, 's2'),
                 TERR(Decimal(5), 0, 's2'),
             ),
-            False,
-            "loss of lock",
-            {
+            'result': False,
+            'reason': "loss of lock",
+            'analysis': {
                 'duration': Decimal(4),
                 'terror': {
                     'units': 'ns',
@@ -70,15 +70,15 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                     'variance': 0,
                 },
             },
-        ),
-        (
-            'G.8272/PRTC-A',
-            {
+        },
+        {
+            'requirements': 'G.8272/PRTC-A',
+            'parameters': {
                 'time-error-limit/%': 10,
                 'transient-period/s': 1,
                 'min-test-duration/s': 4,
             },
-            (
+            'rows': (
                 TERR(Decimal(0),  0, 's2'),
                 TERR(Decimal(1),  0, 's2'),
                 TERR(Decimal(2),  0, 's2'),
@@ -87,9 +87,9 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                 TERR(Decimal(4),  0, 's2'),
                 TERR(Decimal(5),  0, 's2'),
             ),
-            False,
-            "unacceptable time error",
-            {
+            'result': False,
+            'reason': "unacceptable time error",
+            'analysis': {
                 'duration': Decimal(4),
                 'terror': {
                     'units': 'ns',
@@ -101,15 +101,15 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                     'variance': 20.0,
                 },
             },
-        ),
-        (
-            'G.8272/PRTC-A',
-            {
+        },
+        {
+            'requirements': 'G.8272/PRTC-A',
+            'parameters': {
                 'time-error-limit/%': 100,
                 'transient-period/s': 1,
                 'min-test-duration/s': 4,
             },
-            (
+            'rows': (
                 TERR(Decimal(0), 0, 's2'),
                 TERR(Decimal(1), 0, 's2'),
                 TERR(Decimal(2), 0, 's2'),
@@ -117,9 +117,9 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                 TERR(Decimal(4), 0, 's2'),
                 # oops, window too short
             ),
-            False,
-            "short test duration",
-            {
+            'result': False,
+            'reason': "short test duration",
+            'analysis': {
                 'duration': Decimal(3),
                 'terror': {
                     'units': 'ns',
@@ -131,15 +131,15 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                     'variance': 0,
                 },
             },
-        ),
-        (
-            'G.8272/PRTC-A',
-            {
+        },
+        {
+            'requirements': 'G.8272/PRTC-A',
+            'parameters': {
                 'time-error-limit/%': 100,
                 'transient-period/s': 1,
                 'min-test-duration/s': 4,
             },
-            (
+            'rows': (
                 TERR(Decimal(0), 0, 's2'),
                 TERR(Decimal(1), 0, 's2'),
                 TERR(Decimal(2), 0, 's2'),
@@ -147,9 +147,9 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                 # oops, missing sample
                 TERR(Decimal(5), 0, 's2'),
             ),
-            False,
-            "short test samples",
-            {
+            'result': False,
+            'reason': "short test samples",
+            'analysis': {
                 'duration': Decimal(4),
                 'terror': {
                     'units': 'ns',
@@ -161,16 +161,15 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                     'variance': 0,
                 },
             },
-        ),
-        # success
-        (
-            'G.8272/PRTC-A',
-            {
+        },
+        {
+            'requirements': 'G.8272/PRTC-A',
+            'parameters': {
                 'time-error-limit/%': 100,
                 'transient-period/s': 1,
                 'min-test-duration/s': 4,
             },
-            (
+            'rows': (
                 TERR(Decimal(0), 0, 's1'),
                 TERR(Decimal(1), 0, 's2'),
                 TERR(Decimal(2), 0, 's2'),
@@ -178,9 +177,9 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                 TERR(Decimal(4), 0, 's2'),
                 TERR(Decimal(5), 0, 's2'),
             ),
-            True,
-            None,
-            {
+            'result': True,
+            'reason': None,
+            'analysis': {
                 'duration': Decimal(4),
                 'terror': {
                     'units': 'ns',
@@ -192,5 +191,5 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                     'variance': 0,
                 },
             },
-        ),
+        },
     )
