@@ -55,7 +55,7 @@ class Config():
         return cls(filename, dct.get('requirements'), dct.get('parameters'))
 
 class CollectionIsClosed(Exception):
-    """Data Collection has been closed while collecting data"""
+    """Data collection was closed while collecting data"""
     # empty
 
 class Analyzer():
@@ -64,6 +64,9 @@ class Analyzer():
         self._config = config
         self._rows = []
         self._data = None
+        self._result = None
+        self._reason = None
+        self._analysis = None
     def collect(self, *rows):
         """Collect data from `rows`"""
         if self._rows is None:
@@ -84,19 +87,53 @@ class Analyzer():
             (columns, records) = self.prepare(self._rows)
             self._data = DataFrame.from_records(records, columns=columns)
             self._rows = None
+    def _test(self):
+        """Close data collection and test collected data"""
+        if self._result is None:
+            self.close()
+            (self._result, self._reason) = self.test(self._data)
     @property
     def result(self):
-        """Return True if collected data passes this analyzer's test"""
-        self.close()
-        return self.test(self._data)
+        """The boolean result from this analyzer's test of the collected data"""
+        self._test()
+        return self._result
+    @property
+    def reason(self):
+        """A string qualifying :attr:`result` (or None if unqualified)"""
+        self._test()
+        return self._reason
     @property
     def analysis(self):
-        """Return a machine-readable analysis of the collected data"""
-        self.close()
-        return self.explain(self._data)
+        """A structured analysis of the collected data"""
+        if self._analysis is None:
+            self.close()
+            self._analysis = self.explain(self._data)
+        return self._analysis
+    @staticmethod
+    def _statistics(data, units, ndigits=3):
+        """Return a dict of statistics for `data`, rounded to `ndigits`"""
+        def _round(val):
+            """Return `val` as native Python type, rounded to `ndigits`"""
+            return round(val.item(), ndigits)
+        min_ = data.min()
+        max_ = data.max()
+        return {
+            'units': units,
+            'min': _round(min_),
+            'max': _round(max_),
+            'range': _round(max_ - min_),
+            'mean': _round(data.mean()),
+            'stddev': _round(data.std()),
+            'variance': _round(data.var()),
+        }
     def test(self, data):
-        """A boolean function testing if `data` passes this analyzer"""
+        """This analyzer's test of the collected `data`.
+
+        Return a 2-tuple (result, reason). Boolean `result` indicates test
+        pass/fail. String `reason` qualifies `result` (or None is `result`
+        if unqualified).
+        """
         raise NotImplementedError
     def explain(self, data):
-        """Return a machine-readable analysis of `data`"""
+        """Return a structured analysis of the collected `data`"""
         raise NotImplementedError

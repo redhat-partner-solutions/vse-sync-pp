@@ -21,7 +21,6 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
     id_ = 'ts2phc/time-error'
     parser = 'ts2phc/time-error'
     expect = (
-        # no data
         (
             'G.8272/PRTC-A',
             {
@@ -38,9 +37,9 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                 TERR(Decimal(5), 0, 's2'),
             ),
             False,
+            "no data",
             {},
         ),
-        # loss of lock
         (
             'G.8272/PRTC-A',
             {
@@ -58,17 +57,20 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                 TERR(Decimal(5), 0, 's2'),
             ),
             False,
+            "loss of lock",
             {
                 'duration': Decimal(4),
-                'min': 0,
-                'max': 0,
-                'range': 0,
-                'mean': 0,
-                'stddev': 0,
-                'variance': 0,
+                'terror': {
+                    'units': 'ns',
+                    'min': 0,
+                    'max': 0,
+                    'range': 0,
+                    'mean': 0,
+                    'stddev': 0,
+                    'variance': 0,
+                },
             },
         ),
-        # unacceptable time error
         (
             'G.8272/PRTC-A',
             {
@@ -86,17 +88,20 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                 TERR(Decimal(5),  0, 's2'),
             ),
             False,
+            "unacceptable time error",
             {
                 'duration': Decimal(4),
-                'min': 0,
-                'max': 10,
-                'range': 10,
-                'mean': 2,
-                'stddev': math.sqrt(20),
-                'variance': 20,
+                'terror': {
+                    'units': 'ns',
+                    'min': 0,
+                    'max': 10,
+                    'range': 10,
+                    'mean': 2,
+                    'stddev': round(math.sqrt(20), 3),
+                    'variance': 20.0,
+                },
             },
         ),
-        # short test duration
         (
             'G.8272/PRTC-A',
             {
@@ -113,17 +118,20 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                 # oops, window too short
             ),
             False,
+            "short test duration",
             {
                 'duration': Decimal(3),
-                'min': 0,
-                'max': 0,
-                'range': 0,
-                'mean': 0,
-                'stddev': 0,
-                'variance': 0,
+                'terror': {
+                    'units': 'ns',
+                    'min': 0,
+                    'max': 0,
+                    'range': 0,
+                    'mean': 0,
+                    'stddev': 0,
+                    'variance': 0,
+                },
             },
         ),
-        # too few samples for test duration
         (
             'G.8272/PRTC-A',
             {
@@ -140,14 +148,18 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                 TERR(Decimal(5), 0, 's2'),
             ),
             False,
+            "short test samples",
             {
                 'duration': Decimal(4),
-                'min': 0,
-                'max': 0,
-                'range': 0,
-                'mean': 0,
-                'stddev': 0,
-                'variance': 0,
+                'terror': {
+                    'units': 'ns',
+                    'min': 0,
+                    'max': 0,
+                    'range': 0,
+                    'mean': 0,
+                    'stddev': 0,
+                    'variance': 0,
+                },
             },
         ),
         # success
@@ -167,14 +179,18 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                 TERR(Decimal(5), 0, 's2'),
             ),
             True,
+            None,
             {
                 'duration': Decimal(4),
-                'min': 0,
-                'max': 0,
-                'range': 0,
-                'mean': 0,
-                'stddev': 0,
-                'variance': 0,
+                'terror': {
+                    'units': 'ns',
+                    'min': 0,
+                    'max': 0,
+                    'range': 0,
+                    'mean': 0,
+                    'stddev': 0,
+                    'variance': 0,
+                },
             },
         ),
     )

@@ -6,9 +6,11 @@ from argparse import ArgumentParser
 
 import json
 
-from .common import open_input
+from .common import (
+    open_input,
+    JsonEncoder,
+)
 
-from .parsers.parser import JsonEncoder
 from .parsers import dpll
 from .parsers import ts2phc
 

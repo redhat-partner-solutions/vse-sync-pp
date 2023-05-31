@@ -29,35 +29,23 @@ class TimeErrorAnalyzer(Analyzer):
             idx += 1
         return super().prepare(rows[idx:])
     def test(self, data):
-        # failure if there is no data
         if len(data) == 0:
-            return False
-        # failure if state indicates loss of lock
+            return (False, "no data")
         if frozenset(data.state.unique()) != {'s2'}:
-            return False
-        # failure if any sample has unacceptable time error
+            return (False, "loss of lock")
         terr_min = data.terror.min()
         terr_max = data.terror.max()
         if self._unacceptable <= max(abs(terr_min), abs(terr_max)):
-            return False
-        # failure if test duration is too short
+            return (False, "unacceptable time error")
         if data.iloc[-1].timestamp - data.iloc[0].timestamp < self._duration:
-            return False
-        # failure if too few samples received (assume 1 sample/second)
+            return (False, "short test duration")
         if len(data) - 1 < self._duration:
-            return False
-        return True
+            return (False, "short test samples")
+        return (True, None)
     def explain(self, data):
         if len(data) == 0:
             return {}
-        terr_min = data.terror.min()
-        terr_max = data.terror.max()
         return {
             'duration': data.iloc[-1].timestamp - data.iloc[0].timestamp,
-            'min': terr_min,
-            'max': terr_max,
-            'range': terr_max - terr_min,
-            'mean': data.terror.mean(),
-            'stddev': data.terror.std(),
-            'variance': data.terror.var(),
+            'terror': self._statistics(data.terror, 'ns'),
         }

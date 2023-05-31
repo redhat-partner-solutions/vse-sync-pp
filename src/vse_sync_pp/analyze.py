@@ -2,9 +2,13 @@
 
 """Analyze log messages"""
 
+import json
 from argparse import ArgumentParser
 
-from .common import open_input
+from .common import (
+    open_input,
+    JsonEncoder,
+)
 
 from .parse import PARSERS
 
@@ -48,12 +52,12 @@ def main():
         method = parser.canonical if args.canonical else parser.parse
         for parsed in method(fid):
             analyzer.collect(parsed)
-    print(f'result = {analyzer.result}')
-    for (key, val) in analyzer.analysis.items():
-        try:
-            print(f'{key} = {val:.3f}')
-        except ValueError:
-            print(f'{key} = {val}')
+    dct = {
+        'result': analyzer.result,
+        'reason': analyzer.reason,
+        'analysis': analyzer.analysis,
+    }
+    print(json.dumps(dct, cls=JsonEncoder))
 
 if __name__ == '__main__':
     main()

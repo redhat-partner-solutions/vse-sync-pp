@@ -22,17 +22,9 @@ class PhaseOffsetTimeErrorAnalyzer(Analyzer):
         pho_min = data.phaseoffset.min()
         pho_max = data.phaseoffset.max()
         if self._unacceptable <= max(abs(pho_min), abs(pho_max)):
-            return False
-        return True
+            return (False, None)
+        return (True, None)
     def explain(self, data):
-        pho_min = data.phaseoffset.min()
-        pho_max = data.phaseoffset.max()
         return {
-            'units': 'ns',
-            'min': pho_min,
-            'max': pho_max,
-            'range': pho_max - pho_min,
-            'mean': data.phaseoffset.mean(),
-            'stddev': data.phaseoffset.std(),
-            'variance': data.phaseoffset.var(),
+            'phaseoffset': self._statistics(data.phaseoffset, 'ns'),
         }

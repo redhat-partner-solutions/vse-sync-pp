@@ -129,8 +129,15 @@ class AnalyzerTestBuilder(type):
     `constructor` - a callable returning the analyzer to test
     `id_` - the expected value of analyzer class attribute `id_`
     `parser` - the expected value of analyzer class attribute `parser`
-    `expect` - a sequence of (requirements, parameters, rows, result, analysis)
-               giving config, input data, expected outputs
+    `expect` - a sequence of (
+                    requirements,
+                    parameters,
+                    rows,
+                    result,
+                    reason,
+                    analysis,
+                )
+               giving test config, input data, expected outputs
     """
     def __new__(cls, name, bases, dct): # pylint: disable=bad-mcs-classmethod-argument
         constructor = dct['constructor']
@@ -172,16 +179,23 @@ class AnalyzerTestBuilder(type):
         """Make a function testing analyzer test result and analysis"""
         # pylint: disable=too-many-arguments
         @params(*expect)
-        def method(self, requirements, parameters, rows, result, analysis):
-            """Test analyzer produces `result` and `analysis` for `rows`"""
+        def method(
+                self,
+                requirements, parameters,
+                rows,
+                result, reason, analysis,
+            ):
+            """Test analyzer test result and analysis"""
             config = Config(None, requirements, parameters)
             analyzer = constructor(config)
             analyzer.collect(*rows)
             self.assertEqual(analyzer.result, result)
+            self.assertEqual(analyzer.reason, reason)
             self.assertEqual(analyzer.analysis, analysis)
             with self.assertRaises(CollectionIsClosed):
                 analyzer.collect(*rows)
             self.assertEqual(analyzer.result, result)
+            self.assertEqual(analyzer.reason, reason)
             self.assertEqual(analyzer.analysis, analysis)
         method.__doc__ = f'Test {fqname} analyzer test result and analysis'
         return method
