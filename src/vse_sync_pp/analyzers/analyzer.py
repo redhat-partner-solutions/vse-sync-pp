@@ -73,7 +73,14 @@ class Analyzer():
             raise CollectionIsClosed()
         self._rows += rows
     def prepare(self, rows): # pylint: disable=no-self-use
-        raise NotImplementedError
+        """Return (columns, records) from collected data `rows`
+
+        `columns` is a sequence of column names
+        `records` is a sequence of rows prepared for test analysis
+
+        If `records` is an empty sequence, then `columns` is also empty.
+        """
+        return (rows[0]._fields, rows) if rows else ((), ())
     def close(self):
         """Close data collection"""
         if self._data is None:
@@ -147,15 +154,6 @@ class TimeErrorAnalyzer(Analyzer):
         self._duration = config.parameter('min-test-duration/s')
         # default locked value
         self._lockid = {'s2'}
-    def prepare(self, rows):
-        """Return (columns, records) from collected data `rows`
-
-        `columns` is a sequence of column names
-        `records` is a sequence of rows prepared for test analysis
-
-        If `records` is an empty sequence, then `columns` is also empty.
-        """
-        return (rows[0]._fields, rows) if rows else ((), ())
     def test(self, data):
         if len(data) == 0:
             return (False, "no data")
