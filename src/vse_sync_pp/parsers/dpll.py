@@ -10,7 +10,7 @@ from .parser import Parser
 class TimeErrorParser(Parser):
     """Parse phase offset from a dpll CSV sample"""
     id_ = 'dpll/time-error'
-    elems = ('timestamp', 'eecstate', 'phasestate', 'phaseoffset')
+    elems = ('timestamp', 'eecstate', 'state', 'terror')
     y_name = 'phaseoffset'
     parsed = namedtuple('Parsed', elems)
     def make_parsed(self, elems):

@@ -20,8 +20,8 @@ from .analyzers import (
 
 ANALYZERS = {
     cls.id_: cls for cls in (
-        ppsdpll.TimeErrorAnalyzer,
-        ts2phc.TimeErrorAnalyzer,
+        ppsdpll.PpsDpllAnalyzer,
+        ts2phc.Ts2PhcAnalyzer,
     )
 }
 

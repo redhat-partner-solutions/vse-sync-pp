@@ -73,14 +73,7 @@ class Analyzer():
             raise CollectionIsClosed()
         self._rows += rows
     def prepare(self, rows): # pylint: disable=no-self-use
-        """Return (columns, records) from collected data `rows`
-
-        `columns` is a sequence of column names
-        `records` is a sequence of rows prepared for test analysis
-
-        If `records` is an empty sequence, then `columns` is also empty.
-        """
-        return (rows[0]._fields, rows) if rows else ((), ())
+        raise NotImplementedError
     def close(self):
         """Close data collection"""
         if self._data is None:
@@ -137,3 +130,50 @@ class Analyzer():
     def explain(self, data):
         """Return a structured analysis of the collected `data`"""
         raise NotImplementedError
+
+class TimeErrorAnalyzer(Analyzer):
+    """Analyze time error"""
+    def __init__(self, config):
+        super().__init__(config)
+        # required system time output accuracy
+        accuracy = config.requirement('time-error-in-locked-mode/ns')
+        # limit on inaccuracy at observation point
+        limit = config.parameter('time-error-limit/%')
+        # exclusive upper bound on absolute time error for any sample
+        self._unacceptable = accuracy * limit / 100
+        # samples in the initial transient period are ignored
+        self._transient = config.parameter('transient-period/s')
+        # minimum test duration for a valid test
+        self._duration = config.parameter('min-test-duration/s')
+        # default locked value
+        self._lockid = {'s2'}
+    def prepare(self, rows):
+        """Return (columns, records) from collected data `rows`
+
+        `columns` is a sequence of column names
+        `records` is a sequence of rows prepared for test analysis
+
+        If `records` is an empty sequence, then `columns` is also empty.
+        """
+        return (rows[0]._fields, rows) if rows else ((), ())
+    def test(self, data):
+        if len(data) == 0:
+            return (False, "no data")
+        if frozenset(data.state.unique()) != self._lockid:
+            return (False, "loss of lock")
+        terr_min = data.terror.min()
+        terr_max = data.terror.max()
+        if self._unacceptable <= max(abs(terr_min), abs(terr_max)):
+            return (False, "unacceptable time error")
+        if data.iloc[-1].timestamp - data.iloc[0].timestamp < self._duration:
+            return (False, "short test duration")
+        if len(data) - 1 < self._duration:
+            return (False, "short test samples")
+        return (True, None)
+    def explain(self, data):
+        if len(data) == 0:
+            return {}
+        return {
+            'duration': data.iloc[-1].timestamp - data.iloc[0].timestamp,
+            'terror': self._statistics(data.terror, 'ns'),
+        }
