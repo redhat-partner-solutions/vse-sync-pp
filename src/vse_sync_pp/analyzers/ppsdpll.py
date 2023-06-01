@@ -27,6 +27,8 @@ class TimeErrorAnalyzer(Analyzer):
     def test(self, data):
         if len(data) == 0:
             return (False, "no data")
+        if frozenset(data.phasestate.unique()) != {3}:
+            return (False, "loss of lock")
         pho_min = data.phaseoffset.min()
         pho_max = data.phaseoffset.max()
         if self._unacceptable <= max(abs(pho_min), abs(pho_max)):
