@@ -113,8 +113,11 @@ class Analyzer():
     def _statistics(data, units, ndigits=3):
         """Return a dict of statistics for `data`, rounded to `ndigits`"""
         def _round(val):
-            """Return `val` as native Python type, rounded to `ndigits`"""
-            return round(val.item(), ndigits)
+            """Return `val` as native Python type or Decimal, rounded to `ndigits`"""
+            try:
+                return round(val.item(), ndigits)
+            except AttributeError:
+                return round(val, ndigits)
         min_ = data.min()
         max_ = data.max()
         return {
@@ -138,7 +141,7 @@ class Analyzer():
         """Return a structured analysis of the collected `data`"""
         raise NotImplementedError
 
-class TimeErrorAnalyzer(Analyzer):
+class TimeErrorAnalyzerBase(Analyzer):
     """Analyze time error"""
     def __init__(self, config):
         super().__init__(config)
@@ -147,13 +150,13 @@ class TimeErrorAnalyzer(Analyzer):
         # limit on inaccuracy at observation point
         limit = config.parameter('time-error-limit/%')
         # exclusive upper bound on absolute time error for any sample
-        self._unacceptable = accuracy * limit / 100
+        self._unacceptable = accuracy * (limit / 100)
         # samples in the initial transient period are ignored
         self._transient = config.parameter('transient-period/s')
         # minimum test duration for a valid test
         self._duration = config.parameter('min-test-duration/s')
         # default locked value
-        self._lockid = {'s2'}
+        self._lockid = frozenset({'s2'})
     def test(self, data):
         if len(data) == 0:
             return (False, "no data")
@@ -175,3 +178,15 @@ class TimeErrorAnalyzer(Analyzer):
             'duration': data.iloc[-1].timestamp - data.iloc[0].timestamp,
             'terror': self._statistics(data.terror, 'ns'),
         }
+    def prepare(self, rows):
+        idx = 0
+        try:
+            tstart = rows[0].timestamp + self._transient
+        except IndexError:
+            pass
+        else:
+            while idx < len(rows):
+                if tstart <= rows[idx].timestamp:
+                    break
+                idx += 1
+        return super().prepare(rows[idx:])

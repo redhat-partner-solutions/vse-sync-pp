@@ -12,7 +12,7 @@ from vse_sync_pp.analyzers.ppsdpll import (
 
 from .test_analyzer import AnalyzerTestBuilder
 
-DPLLS = namedtuple('DPLLS', ('timestamp','eecstate', 'phasestate', 'phaseoffset',))
+DPLLS = namedtuple('DPLLS', ('timestamp','eecstate', 'state', 'terror',))
 
 class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
     """Test cases for vse_sync_pp.analyzers.ppsdpll.TimeErrorAnalyzer"""
@@ -31,19 +31,20 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                 DPLLS(Decimal('1876878.28'), 3, 3, Decimal(1)),
                 DPLLS(Decimal('1876879.28'), 3, 3, Decimal(1)),
                 DPLLS(Decimal('1876880.28'), 3, 3, Decimal(1)),
+                DPLLS(Decimal('1876881.28'), 3, 3, Decimal(1)),
             ),
             'result': True,
             'reason': None,
             'analysis': {
-                'duration': Decimal(2),
-                'phaseoffset': {
+                'duration': Decimal(2.0),
+                'terror': {
                     'units': 'ns',
-                    'min': 1,
-                    'max': 1,
-                    'range': 0,
-                    'mean': 1,
-                    'stddev': 0,
-                    'variance': 0,
+                    'min': 1.0,
+                    'max': 1.0,
+                    'range': 0.0,
+                    'mean': 1.0,
+                    'stddev': 0.0,
+                    'variance': 0.0,
                 },
             },
         },
@@ -62,15 +63,15 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             'result': True,
             'reason': None,
             'analysis': {
-                'duration': Decimal(2),
-                'phaseoffset': {
+                'duration': Decimal(1.0),
+                'terror': {
                     'units': 'ns',
-                    'min': 1,
-                    'max': 1,
-                    'range': 0,
-                    'mean': 1,
-                    'stddev': 0,
-                    'variance': 0,
+                    'min': 1.0,
+                    'max': 1.0,
+                    'range': 0.0,
+                    'mean': 1.0,
+                    'stddev': 0.0,
+                    'variance': 0.0,
                 },
             },
         },
@@ -79,7 +80,7 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             'parameters': {
                 'time-error-limit/%': 100,
                 'transient-period/s': 1,
-                'min-test-duration/s': 4,
+                'min-test-duration/s': 3,
             },
             'rows': (
                 DPLLS(Decimal('1876878.28'), 3, 3, Decimal(1)),
@@ -91,15 +92,15 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             'result': False,
             'reason': "short test samples",
             'analysis': {
-                'duration': Decimal(4),
-                'phaseoffset': {
+                'duration': Decimal(3.0),
+                'terror': {
                     'units': 'ns',
-                    'min': 1,
-                    'max': 1,
-                    'range': 0,
-                    'mean': 1,
-                    'stddev': 0,
-                    'variance': 0,
+                    'min': 1.0,
+                    'max': 1.0,
+                    'range': 0.0,
+                    'mean': 1.0,
+                    'stddev': 0.0,
+                    'variance': 0.0,
                 },
             },
         },
@@ -118,15 +119,15 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             'result': False,
             'reason': "short test duration",
             'analysis': {
-                'duration': Decimal(2),
-                'phaseoffset': {
+                'duration': Decimal(1.0),
+                'terror': {
                     'units': 'ns',
-                    'min': 1,
-                    'max': 1,
-                    'range': 0,
-                    'mean': 1,
-                    'stddev': 0,
-                    'variance': 0,
+                    'min': 1.0,
+                    'max': 1.0,
+                    'range': 0.0,
+                    'mean': 1.0,
+                    'stddev': 0.0,
+                    'variance': 0.0,
                 },
             },
         },
@@ -138,6 +139,7 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                 'min-test-duration/s': 1,
             },
             'rows': (
+                DPLLS(Decimal('1876877.28'), 3, 3, Decimal(-40)),
                 DPLLS(Decimal('1876878.28'), 3, 3, Decimal(-40)),
                 DPLLS(Decimal('1876879.28'), 3, 3, Decimal(-39)),
                 DPLLS(Decimal('1876880.28'), 3, 3, Decimal(-38)),
@@ -145,15 +147,15 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             'result': False,
             'reason': "unacceptable time error",
             'analysis': {
-                'duration': Decimal(2),
-                'phaseoffset': {
+                'duration': Decimal(2.0),
+                'terror': {
                     'units': 'ns',
-                    'min': -40,
-                    'max': -38,
-                    'range': 2,
-                    'mean': -39,
-                    'stddev': 1,
-                    'variance': 1,
+                    'min': -40.0,
+                    'max': -38.0,
+                    'range': 2.0,
+                    'mean': -39.0,
+                    'stddev': 1.0,
+                    'variance': 1.0,
                 },
             },
         },
@@ -162,9 +164,10 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             'parameters': {
                 'time-error-limit/%': 100,
                 'transient-period/s': 1,
-                'min-test-duration/s': 2,
+                'min-test-duration/s': 1,
             },
             'rows': (
+                DPLLS(Decimal('1876877.28'), 3, 3, Decimal(-40)),
                 DPLLS(Decimal('1876878.28'), 3, 3, Decimal(-40)),
                 DPLLS(Decimal('1876879.28'), 3, 3, Decimal(-39)),
                 DPLLS(Decimal('1876880.28'), 3, 3, Decimal(-38)),
@@ -172,15 +175,15 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             'result': False,
             'reason': "unacceptable time error",
             'analysis': {
-                'duration': Decimal(2),
-                'phaseoffset': {
+                'duration': Decimal(2.0),
+                'terror': {
                     'units': 'ns',
-                    'min': -40,
-                    'max': -38,
-                    'range': 2,
-                    'mean': -39,
-                    'stddev': 1,
-                    'variance': 1,
+                    'min': -40.0,
+                    'max': -38.0,
+                    'range': 2.0,
+                    'mean': -39.0,
+                    'stddev': 1.0,
+                    'variance': 1.0,
                 },
             },
         },
@@ -192,6 +195,7 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                 'min-test-duration/s': 3,
             },
             'rows': (
+                DPLLS(Decimal('1876877.28'), 3, 3, Decimal(38)),
                 DPLLS(Decimal('1876878.28'), 3, 3, Decimal(38)),
                 DPLLS(Decimal('1876879.28'), 3, 3, Decimal(39)),
                 DPLLS(Decimal('1876880.28'), 3, 3, Decimal(40)),
@@ -199,15 +203,15 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             'result': False,
             'reason': "short test duration",
             'analysis': {
-                'duration': Decimal(2),
-                'phaseoffset': {
+                'duration': Decimal(2.0),
+                'terror': {
                     'units': 'ns',
-                    'min': 38,
-                    'max': 40,
-                    'range': 2,
-                    'mean': 39,
-                    'stddev': 1,
-                    'variance': 1,
+                    'min': 38.0,
+                    'max': 40.0,
+                    'range': 2.0,
+                    'mean': 39.0,
+                    'stddev': 1.0,
+                    'variance': 1.0,
                 },
             },
         },
@@ -218,8 +222,7 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                 'transient-period/s': 1,
                 'min-test-duration/s': 3,
             },
-            'rows': (
-            ),
+            'rows': (),
             'result': False,
             'reason': "no data",
             'analysis': {
@@ -233,22 +236,23 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                 'min-test-duration/s': 1,
             },
             'rows': (
+                DPLLS(Decimal('1876877.28'), 3, 3, Decimal(38)),
                 DPLLS(Decimal('1876878.28'), 3, 3, Decimal(38)),
                 DPLLS(Decimal('1876879.28'), 3, 3, Decimal(39)),
-                DPLLS(Decimal('1876880.28'), 3, 3, Decimal(40)),  
+                DPLLS(Decimal('1876880.28'), 3, 3, Decimal(40)),
             ),
             'result': False,
             'reason': "unacceptable time error",
             'analysis': {
-                'duration': Decimal(2),
-                'phaseoffset': {
+                'duration': Decimal(2.0),
+                'terror': {
                     'units': 'ns',
-                    'min': 38,
-                    'max': 40,
-                    'range': 2,
-                    'mean': 39,
-                    'stddev': 1,
-                    'variance': 1,
+                    'min': 38.0,
+                    'max': 40.0,
+                    'range': 2.0,
+                    'mean': 39.0,
+                    'stddev': 1.0,
+                    'variance': 1.0,
                 },
             },
         },
