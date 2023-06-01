@@ -12,7 +12,7 @@ from vse_sync_pp.analyzers.ppsdpll import (
 
 from .test_analyzer import AnalyzerTestBuilder
 
-DPO = namedtuple('DPO', ('phaseoffset',))
+DPLLS = namedtuple('DPLLS', ('timestamp','eecstate', 'phasestate', 'phaseoffset',))
 
 class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
     """Test cases for vse_sync_pp.analyzers.ppsdpll.TimeErrorAnalyzer"""
@@ -22,15 +22,20 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
     expect = (
         {
             'requirements': 'G.8272/PRTC-A',
-            'parameters': None,
+            'parameters': {
+                'time-error-limit/%': 100,
+                'transient-period/s': 1,
+                'min-test-duration/s': 1,
+            },
             'rows': (
-                DPO(Decimal(1)),
-                DPO(Decimal(1)),
-                DPO(Decimal(1)),
+                DPLLS(Decimal('1876878.28'), 3, 3, Decimal(1)),
+                DPLLS(Decimal('1876879.28'), 3, 3, Decimal(1)),
+                DPLLS(Decimal('1876880.28'), 3, 3, Decimal(1)),
             ),
             'result': True,
             'reason': None,
             'analysis': {
+                'duration': Decimal(2),
                 'phaseoffset': {
                     'units': 'ns',
                     'min': 1,
@@ -44,15 +49,20 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
         },
         {
             'requirements': 'G.8272/PRTC-B',
-            'parameters': None,
+            'parameters': {
+                'time-error-limit/%': 100,
+                'transient-period/s': 1,
+                'min-test-duration/s': 1,
+            },
             'rows': (
-                DPO(Decimal(1)),
-                DPO(Decimal(1)),
-                DPO(Decimal(1)),
+                DPLLS(Decimal('1876878.28'), 3, 3, Decimal(1)),
+                DPLLS(Decimal('1876879.28'), 3, 3, Decimal(1)),
+                DPLLS(Decimal('1876880.28'), 3, 3, Decimal(1)),
             ),
             'result': True,
             'reason': None,
             'analysis': {
+                'duration': Decimal(2),
                 'phaseoffset': {
                     'units': 'ns',
                     'min': 1,
@@ -65,38 +75,104 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             },
         },
         {
-            'requirements': 'G.8272/PRTC-A',
-            'parameters': None,
-            'rows': (
-                DPO(Decimal(-40)),
-                DPO(Decimal(-39)),
-                DPO(Decimal(-38)),
-            ),
-            'result': True,
-            'reason': None,
-            'analysis': {
-                'phaseoffset': {
-                    'units': 'ns',
-                    'min': -40,
-                    'max': -38,
-                    'range': 2,
-                    'mean': -39,
-                    'stddev': 1,
-                    'variance': 1,
-                },
-            },
-        },
-        {
             'requirements': 'G.8272/PRTC-B',
-            'parameters': None,
+            'parameters': {
+                'time-error-limit/%': 100,
+                'transient-period/s': 1,
+                'min-test-duration/s': 4,
+            },
             'rows': (
-                DPO(Decimal(-40)),
-                DPO(Decimal(-39)),
-                DPO(Decimal(-38)),
+                DPLLS(Decimal('1876878.28'), 3, 3, Decimal(1)),
+                DPLLS(Decimal('1876879.28'), 3, 3, Decimal(1)),
+                #oops lost sample
+                DPLLS(Decimal('1876881.28'), 3, 3, Decimal(1)),
+                DPLLS(Decimal('1876882.28'), 3, 3, Decimal(1)),
             ),
             'result': False,
-            'reason': None,
+            'reason': "short test samples",
             'analysis': {
+                'duration': Decimal(4),
+                'phaseoffset': {
+                    'units': 'ns',
+                    'min': 1,
+                    'max': 1,
+                    'range': 0,
+                    'mean': 1,
+                    'stddev': 0,
+                    'variance': 0,
+                },
+            },
+        },
+        {
+            'requirements': 'G.8272/PRTC-B',
+            'parameters': {
+                'time-error-limit/%': 100,
+                'transient-period/s': 1,
+                'min-test-duration/s': 3,
+            },
+            'rows': (
+                DPLLS(Decimal('1876878.28'), 3, 3, Decimal(1)),
+                DPLLS(Decimal('1876879.28'), 3, 3, Decimal(1)),
+                DPLLS(Decimal('1876880.28'), 3, 3, Decimal(1)),
+            ),
+            'result': False,
+            'reason': "short test duration",
+            'analysis': {
+                'duration': Decimal(2),
+                'phaseoffset': {
+                    'units': 'ns',
+                    'min': 1,
+                    'max': 1,
+                    'range': 0,
+                    'mean': 1,
+                    'stddev': 0,
+                    'variance': 0,
+                },
+            },
+        },
+        {
+            'requirements': 'G.8272/PRTC-A',
+            'parameters': {
+                'time-error-limit/%': 10,
+                'transient-period/s': 1,
+                'min-test-duration/s': 1,
+            },
+            'rows': (
+                DPLLS(Decimal('1876878.28'), 3, 3, Decimal(-40)),
+                DPLLS(Decimal('1876879.28'), 3, 3, Decimal(-39)),
+                DPLLS(Decimal('1876880.28'), 3, 3, Decimal(-38)),
+            ),
+            'result': False,
+            'reason': "unacceptable time error",
+            'analysis': {
+                'duration': Decimal(2),
+                'phaseoffset': {
+                    'units': 'ns',
+                    'min': -40,
+                    'max': -38,
+                    'range': 2,
+                    'mean': -39,
+                    'stddev': 1,
+                    'variance': 1,
+                },
+            },
+        },
+        {
+            'requirements': 'G.8272/PRTC-B',
+            'parameters': {
+                'time-error-limit/%': 100,
+                'transient-period/s': 1,
+                'min-test-duration/s': 2,
+            },
+            'rows': (
+                DPLLS(Decimal('1876878.28'), 3, 3, Decimal(-40)),
+                DPLLS(Decimal('1876879.28'), 3, 3, Decimal(-39)),
+                DPLLS(Decimal('1876880.28'), 3, 3, Decimal(-38)),
+            ),
+            'result': False,
+            'reason': "unacceptable time error",
+            'analysis': {
+                'duration': Decimal(2),
                 'phaseoffset': {
                     'units': 'ns',
                     'min': -40,
@@ -110,15 +186,20 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
         },
         {
             'requirements': 'G.8272/PRTC-A',
-            'parameters': None,
+            'parameters': {
+                'time-error-limit/%': 100,
+                'transient-period/s': 1,
+                'min-test-duration/s': 3,
+            },
             'rows': (
-                DPO(Decimal(38)),
-                DPO(Decimal(39)),
-                DPO(Decimal(40)),
+                DPLLS(Decimal('1876878.28'), 3, 3, Decimal(38)),
+                DPLLS(Decimal('1876879.28'), 3, 3, Decimal(39)),
+                DPLLS(Decimal('1876880.28'), 3, 3, Decimal(40)),
             ),
-            'result': True,
-            'reason': None,
+            'result': False,
+            'reason': "short test duration",
             'analysis': {
+                'duration': Decimal(2),
                 'phaseoffset': {
                     'units': 'ns',
                     'min': 38,
@@ -131,16 +212,35 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             },
         },
         {
-            'requirements': 'G.8272/PRTC-B',
-            'parameters': None,
+            'requirements': 'G.8272/PRTC-A',
+            'parameters': {
+                'time-error-limit/%': 100,
+                'transient-period/s': 1,
+                'min-test-duration/s': 3,
+            },
             'rows': (
-                DPO(Decimal(38)),
-                DPO(Decimal(39)),
-                DPO(Decimal(40)),
             ),
             'result': False,
-            'reason': None,
+            'reason': "no data",
             'analysis': {
+            },
+        },
+        {
+            'requirements': 'G.8272/PRTC-B',
+            'parameters': {
+                'time-error-limit/%': 100,
+                'transient-period/s': 1,
+                'min-test-duration/s': 1,
+            },
+            'rows': (
+                DPLLS(Decimal('1876878.28'), 3, 3, Decimal(38)),
+                DPLLS(Decimal('1876879.28'), 3, 3, Decimal(39)),
+                DPLLS(Decimal('1876880.28'), 3, 3, Decimal(40)),  
+            ),
+            'result': False,
+            'reason': "unacceptable time error",
+            'analysis': {
+                'duration': Decimal(2),
                 'phaseoffset': {
                     'units': 'ns',
                     'min': 38,

@@ -30,7 +30,7 @@ class TimeErrorAnalyzer(Analyzer):
         pho_min = data.phaseoffset.min()
         pho_max = data.phaseoffset.max()
         if self._unacceptable <= max(abs(pho_min), abs(pho_max)):
-            return (False, None)
+            return (False, "unacceptable time error")
         if data.iloc[-1].timestamp - data.iloc[0].timestamp < self._duration:
             return (False, "short test duration")
         if len(data) - 1 < self._duration:
