@@ -17,8 +17,8 @@ DPLLS = namedtuple('DPLLS', ('timestamp','eecstate', 'phasestate', 'phaseoffset'
 class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
     """Test cases for vse_sync_pp.analyzers.ppsdpll.TimeErrorAnalyzer"""
     constructor = TimeErrorAnalyzer
-    id_ = 'ppsdpll/phase-offset-time-error'
-    parser = 'dpll/phase-offset'
+    id_ = 'ppsdpll/time-error'
+    parser = 'dpll/time-error'
     expect = (
         {
             'requirements': 'G.8272/PRTC-A',

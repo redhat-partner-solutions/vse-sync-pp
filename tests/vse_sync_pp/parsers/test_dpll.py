@@ -14,7 +14,7 @@ from .test_parser import ParserTestBuilder
 class TestTimeErrorParser(TestCase, metaclass=ParserTestBuilder):
     """Test cases for vse_sync_pp.parsers.dpll.TimeErrorParser"""
     constructor = TimeErrorParser
-    id_ = 'dpll/phase-offset'
+    id_ = 'dpll/time-error'
     elems = ('timestamp', 'eecstate', 'phasestate', 'phaseoffset')
     accept = (
         (   '1876878.28,3,3,-0.79',

@@ -6,8 +6,8 @@ from .analyzer import Analyzer
 
 class TimeErrorAnalyzer(Analyzer):
     """Analyze DPLL phase offset time error"""
-    id_ = 'ppsdpll/phase-offset-time-error'
-    parser = 'dpll/phase-offset'
+    id_ = 'ppsdpll/time-error'
+    parser = 'dpll/time-error'
     def __init__(self, config):
         super().__init__(config)
         # required system time output accuracy
