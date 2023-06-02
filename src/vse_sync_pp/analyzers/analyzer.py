@@ -156,11 +156,10 @@ class TimeErrorAnalyzerBase(Analyzer):
         # minimum test duration for a valid test
         self._duration = config.parameter('min-test-duration/s')
         # default locked value
-        self._lockid = frozenset({'s2'})
     def test(self, data):
         if len(data) == 0:
             return (False, "no data")
-        if frozenset(data.state.unique()) != self._lockid:
+        if frozenset(data.state.unique()) != self.lockid: # pylint: disable=no-member
             return (False, "loss of lock")
         terr_min = data.terror.min()
         terr_max = data.terror.max()
