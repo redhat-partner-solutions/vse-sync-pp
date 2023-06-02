@@ -8,4 +8,4 @@ class TimeErrorAnalyzer(TimeErrorAnalyzerBase):
     """Analyze time error"""
     id_ = 'ts2phc/time-error'
     parser = id_
-    lockid = frozenset({'s2'})
+    locked = frozenset({'s2'})

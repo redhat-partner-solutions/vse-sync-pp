@@ -142,7 +142,12 @@ class Analyzer():
         raise NotImplementedError
 
 class TimeErrorAnalyzerBase(Analyzer):
-    """Analyze time error"""
+    """Analyze time error.
+
+    Derived classes must override class attribute `locked`, specifying a
+    frozenset of values representing locked states.
+    """
+    locked = frozenset()
     def __init__(self, config):
         super().__init__(config)
         # required system time output accuracy
@@ -155,11 +160,22 @@ class TimeErrorAnalyzerBase(Analyzer):
         self._transient = config.parameter('transient-period/s')
         # minimum test duration for a valid test
         self._duration = config.parameter('min-test-duration/s')
-        # default locked value
+    def prepare(self, rows):
+        idx = 0
+        try:
+            tstart = rows[0].timestamp + self._transient
+        except IndexError:
+            pass
+        else:
+            while idx < len(rows):
+                if tstart <= rows[idx].timestamp:
+                    break
+                idx += 1
+        return super().prepare(rows[idx:])
     def test(self, data):
         if len(data) == 0:
             return (False, "no data")
-        if frozenset(data.state.unique()) != self.lockid: # pylint: disable=no-member
+        if frozenset(data.state.unique()).difference(self.locked): # pylint: disable=no-member
             return (False, "loss of lock")
         terr_min = data.terror.min()
         terr_max = data.terror.max()
@@ -177,15 +193,3 @@ class TimeErrorAnalyzerBase(Analyzer):
             'duration': data.iloc[-1].timestamp - data.iloc[0].timestamp,
             'terror': self._statistics(data.terror, 'ns'),
         }
-    def prepare(self, rows):
-        idx = 0
-        try:
-            tstart = rows[0].timestamp + self._transient
-        except IndexError:
-            pass
-        else:
-            while idx < len(rows):
-                if tstart <= rows[idx].timestamp:
-                    break
-                idx += 1
-        return super().prepare(rows[idx:])
