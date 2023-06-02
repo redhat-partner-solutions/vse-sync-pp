@@ -8,5 +8,3 @@ class TimeErrorAnalyzer(TimeErrorAnalyzerBase):
     """Analyze time error"""
     id_ = 'ts2phc/time-error'
     parser = id_
-    def __init__(self, config):
-        super().__init__(config)
