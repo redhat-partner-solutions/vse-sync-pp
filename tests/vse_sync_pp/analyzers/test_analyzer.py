@@ -171,9 +171,10 @@ class AnalyzerTestBuilder(type):
     def make_test_result(constructor, fqname, expect):
         """Make a function testing analyzer test result and analysis"""
         # pylint: disable=too-many-arguments
-        @params(*expect)
-        def method(self, dct):
+        @params(*enumerate(expect))
+        def method(self, idx, dct):
             """Test analyzer test result and analysis"""
+            msg = f'(item {idx} in `expect`)'
             requirements = dct['requirements']
             parameters = dct['parameters']
             rows = dct['rows']
@@ -183,13 +184,13 @@ class AnalyzerTestBuilder(type):
             config = Config(None, requirements, parameters)
             analyzer = constructor(config)
             analyzer.collect(*rows)
-            self.assertEqual(analyzer.result, result)
-            self.assertEqual(analyzer.reason, reason)
-            self.assertEqual(analyzer.analysis, analysis)
-            with self.assertRaises(CollectionIsClosed):
+            self.assertEqual(analyzer.result, result, msg=msg)
+            self.assertEqual(analyzer.reason, reason, msg=msg)
+            self.assertEqual(analyzer.analysis, analysis, msg=msg)
+            with self.assertRaises(CollectionIsClosed, msg=msg):
                 analyzer.collect(*rows)
-            self.assertEqual(analyzer.result, result)
-            self.assertEqual(analyzer.reason, reason)
-            self.assertEqual(analyzer.analysis, analysis)
+            self.assertEqual(analyzer.result, result, msg=msg)
+            self.assertEqual(analyzer.reason, reason, msg=msg)
+            self.assertEqual(analyzer.analysis, analysis, msg=msg)
         method.__doc__ = f'Test {fqname} analyzer test result and analysis'
         return method
