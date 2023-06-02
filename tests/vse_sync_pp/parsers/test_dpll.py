@@ -17,7 +17,7 @@ class TestTimeErrorParser(TestCase, metaclass=ParserTestBuilder):
     id_ = 'dpll/time-error'
     elems = ('timestamp', 'eecstate', 'state', 'terror')
     accept = (
-        (   
+        (
             '1876878.28,3,3,-0.79',
             (Decimal('1876878.28'), 3, 3, Decimal('-0.79')),
         ),
