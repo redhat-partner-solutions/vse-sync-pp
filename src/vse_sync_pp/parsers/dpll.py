@@ -7,11 +7,11 @@ from decimal import (Decimal, InvalidOperation)
 
 from .parser import Parser
 
-class PhaseOffset(Parser):
-    """Parse phase offset from a dpll CSV sample"""
-    id_ = 'dpll/phase-offset'
-    elems = ('timestamp', 'eecstate', 'phasestate', 'phaseoffset')
-    y_name = 'phaseoffset'
+class TimeErrorParser(Parser):
+    """Parse Time Error from a dpll CSV sample"""
+    id_ = 'dpll/time-error'
+    elems = ('timestamp', 'eecstate', 'state', 'terror')
+    y_name = 'terror'
     parsed = namedtuple('Parsed', elems)
     def make_parsed(self, elems):
         if len(elems) != len(self.elems):
@@ -21,12 +21,12 @@ class PhaseOffset(Parser):
         except InvalidOperation as exc:
             raise ValueError(elems[0]) from exc
         try:
-            phaseoffset = Decimal(elems[3])
+            terror = Decimal(elems[3])
         except InvalidOperation as exc:
             raise ValueError(elems[3]) from exc
         eecstate = int(elems[1])
-        phasestate = int(elems[2])
-        return self.parsed(timestamp, eecstate, phasestate, phaseoffset)
+        state = int(elems[2])
+        return self.parsed(timestamp, eecstate, state, terror)
     def parse_line(self, line):
         # DPLL samples come from a fixed format CSV file
         return self.make_parsed(line.split(','))
