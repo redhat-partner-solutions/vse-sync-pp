@@ -14,12 +14,14 @@ from .parse import PARSERS
 
 from .analyzers.analyzer import Config
 from .analyzers import (
+    gnss,
     ppsdpll,
     ts2phc,
 )
 
 ANALYZERS = {
     cls.id_: cls for cls in (
+        gnss.TimeErrorAnalyzer,
         ppsdpll.TimeErrorAnalyzer,
         ts2phc.TimeErrorAnalyzer,
     )
