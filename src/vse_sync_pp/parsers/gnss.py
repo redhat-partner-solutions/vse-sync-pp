@@ -10,8 +10,14 @@ from .parser import Parser
 class TimeErrorParser(Parser):
     """Parse time error from a GNSS CSV sample"""
     id_ = 'gnss/time-error'
+    # 'state' values are assumed to be u-blox gpsFix values
+    # 0 = no fix
+    # 1 = dead reckoning only
+    # 2 = 2D-Fix
+    # 3 = 3D-Fix
+    # 4 = GPS + dead reckoning combined
+    # 5 = time only fix
     elems = ('timestamp', 'state', 'terror')
-    ### TODO: define state mappings
     y_name = 'terror'
     parsed = namedtuple('Parsed', elems)
     def make_parsed(self, elems):
