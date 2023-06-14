@@ -11,11 +11,13 @@ from .common import (
     JsonEncoder,
 )
 
+from .parsers import gnss
 from .parsers import dpll
 from .parsers import ts2phc
 
 PARSERS = {
     cls.id_: cls for cls in (
+        gnss.TimeErrorParser,
         dpll.TimeErrorParser,
         ts2phc.TimeErrorParser,
     )
