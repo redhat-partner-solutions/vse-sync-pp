@@ -2,6 +2,20 @@
 
 ## Running
 
+### Filter collector data from file 
+
+To see the collector filters available:
+
+    python3 -m vse_sync_pp.filter --help
+
+To filter a collector from file:
+
+    python3 -m vse_sync_pp.filter <filename> <filter>
+
+To filter a collector presented on stdin:
+
+    python3 -m vse_sync_pp.filter - <filter>
+
 ### Parse a log file
 
 To see the parsers available:
