@@ -3,9 +3,8 @@
 """Parse GNSS log messages"""
 
 from collections import namedtuple
-from decimal import (Decimal, InvalidOperation)
 
-from .parser import Parser
+from .parser import (Parser, parse_timestamp)
 
 class TimeErrorParser(Parser):
     """Parse time error from a GNSS CSV sample"""
@@ -23,15 +22,10 @@ class TimeErrorParser(Parser):
     def make_parsed(self, elems):
         if len(elems) != len(self.elems):
             raise ValueError(elems)
-        try:
-            timestamp = Decimal(elems[0])
-        except InvalidOperation as exc:
-            raise ValueError(elems[0]) from exc
-        return self.parsed(
-            timestamp,
-            int(elems[1]),
-            int(elems[2]),
-        )
+        timestamp = parse_timestamp(elems[0])
+        state = int(elems[1])
+        terror = int(elems[2])
+        return self.parsed(timestamp, state, terror)
     def parse_line(self, line):
         # GNSS samples come from a fixed format CSV file
         return self.make_parsed(line.split(','))

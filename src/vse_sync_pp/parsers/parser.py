@@ -3,7 +3,46 @@
 """Common parser functionality"""
 
 import json
-from decimal import Decimal
+import re
+from datetime import (datetime, timezone)
+from decimal import (Decimal, InvalidOperation)
+
+# sufficient regex to extract the whole decimal fraction part
+RE_ISO8601_DECFRAC = re.compile(
+    r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.(\d+)'
+)
+
+def parse_timestamp_abs(val):
+    """Return a :class:`Decimal` from `val`, an absolute timestamp string.
+
+    Accepted absolute timestamp strings are ISO 8601 format with restrictions.
+    The string must: explicitly specify UTC timezone, supply time in seconds,
+    specify a decimal fractional part with a decimal mark of '.'.
+
+    Return None if `val` is not a string or is not an ISO 8601 format string.
+    Raise :class:`ValueError` otherwise.
+    """
+    try:
+        dtv = datetime.fromisoformat(val)
+    except (TypeError, ValueError):
+        return None
+    if dtv.tzinfo != timezone.utc:
+        raise ValueError(val)
+    match = RE_ISO8601_DECFRAC.match(val)
+    if match is None:
+        raise ValueError(val)
+    return Decimal(f'{int(dtv.timestamp())}.{match.group(1)}')
+
+def parse_decimal(val):
+    """Return a :class:`Decimal` from `val` or raise :class:`ValueError`"""
+    try:
+        return Decimal(val)
+    except InvalidOperation as exc:
+        raise ValueError(val) from exc
+
+def parse_timestamp(val):
+    """Return a :class:`Decimal` from absolute or relative timestamp `val`"""
+    return parse_timestamp_abs(val) or parse_decimal(val)
 
 class Parser():
     """A base class providing common parser functionality"""
