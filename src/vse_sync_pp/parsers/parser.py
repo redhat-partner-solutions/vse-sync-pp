@@ -9,7 +9,7 @@ from decimal import (Decimal, InvalidOperation)
 
 # sufficient regex to extract the whole decimal fraction part
 RE_ISO8601_DECFRAC = re.compile(
-    r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.(\d+)'
+    r'^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})\.(\d+)(.*)$'
 )
 
 def parse_timestamp_abs(val):
@@ -24,14 +24,25 @@ def parse_timestamp_abs(val):
     """
     try:
         dtv = datetime.fromisoformat(val)
-    except (TypeError, ValueError):
+    except TypeError:
         return None
+    except ValueError:
+        # before Python 3.11 `fromisoformat` fails if UTC denoted by 'Z' and/or
+        # the decimal fraction has more than 6 digits
+        match = RE_ISO8601_DECFRAC.match(val)
+        if match is None:
+            return None
+        # parse without decimal fraction, with 'Z' substituted
+        dtv = datetime.fromisoformat(
+            val.group(1) + '+00:00' if val.group(3) == 'Z' else val.group(3)
+        )
+    else:
+        match = RE_ISO8601_DECFRAC.match(val)
+        if match is None:
+            raise ValueError(val)
     if dtv.tzinfo != timezone.utc:
         raise ValueError(val)
-    match = RE_ISO8601_DECFRAC.match(val)
-    if match is None:
-        raise ValueError(val)
-    return Decimal(f'{int(dtv.timestamp())}.{match.group(1)}')
+    return Decimal(f'{int(dtv.timestamp())}.{match.group(2)}')
 
 def parse_decimal(val):
     """Return a :class:`Decimal` from `val` or raise :class:`ValueError`"""
