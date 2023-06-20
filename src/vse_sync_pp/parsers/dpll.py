@@ -3,9 +3,8 @@
 """Parse dpll log messages"""
 
 from collections import namedtuple
-from decimal import (Decimal, InvalidOperation)
 
-from .parser import Parser
+from .parser import (Parser, parse_timestamp, parse_decimal)
 
 class TimeErrorParser(Parser):
     """Parse Time Error from a dpll CSV sample"""
@@ -16,16 +15,10 @@ class TimeErrorParser(Parser):
     def make_parsed(self, elems):
         if len(elems) != len(self.elems):
             raise ValueError(elems)
-        try:
-            timestamp = Decimal(elems[0])
-        except InvalidOperation as exc:
-            raise ValueError(elems[0]) from exc
-        try:
-            terror = Decimal(elems[3])
-        except InvalidOperation as exc:
-            raise ValueError(elems[3]) from exc
+        timestamp = parse_timestamp(elems[0])
         eecstate = int(elems[1])
         state = int(elems[2])
+        terror = parse_decimal(elems[3])
         return self.parsed(timestamp, eecstate, state, terror)
     def parse_line(self, line):
         # DPLL samples come from a fixed format CSV file

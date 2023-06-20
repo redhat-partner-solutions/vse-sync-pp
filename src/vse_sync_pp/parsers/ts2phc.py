@@ -4,9 +4,8 @@
 
 import re
 from collections import namedtuple
-from decimal import Decimal
 
-from .parser import Parser
+from .parser import (Parser, parse_decimal)
 
 class TimeErrorParser(Parser):
     """Parse time error from a ts2phc log message"""
@@ -36,12 +35,11 @@ class TimeErrorParser(Parser):
     def make_parsed(self, elems):
         if len(elems) != len(self.elems):
             raise ValueError(elems)
-        return self.parsed(
-            Decimal(elems[0]),
-            str(elems[1]),
-            int(elems[2]),
-            str(elems[3]),
-        )
+        timestamp = parse_decimal(elems[0])
+        interface = str(elems[1])
+        terror = int(elems[2])
+        state = str(elems[3])
+        return self.parsed(timestamp, interface, terror, state)
     def parse_line(self, line):
         matched = self._regexp.match(line)
         if matched:
