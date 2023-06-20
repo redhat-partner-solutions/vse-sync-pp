@@ -33,15 +33,15 @@ def parse_timestamp_abs(val):
         if match is None:
             return None
         # parse without decimal fraction, with 'Z' substituted
-        dtv = datetime.fromisoformat(
-            val.group(1) + '+00:00' if val.group(3) == 'Z' else val.group(3)
-        )
+        tzv = '+00:00' if match.group(3) == 'Z' else match.group(3)
+        dtv = datetime.fromisoformat(match.group(1) + tzv)
     else:
         match = RE_ISO8601_DECFRAC.match(val)
         if match is None:
             raise ValueError(val)
     if dtv.tzinfo != timezone.utc:
         raise ValueError(val)
+    # `dtv` may truncate decimal fraction: use decimal fraction from `val`
     return Decimal(f'{int(dtv.timestamp())}.{match.group(2)}')
 
 def parse_decimal(val):
