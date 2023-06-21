@@ -143,7 +143,8 @@ def main():
     parsing the first log message from each source. The message with the lowest
     timestamp in this set is written to stdout before being replaced by the next
     log message from its source. This process is repeated until all sources are
-    empty.
+    empty. (For the avoidance of doubt, log messages within a single source are
+    not sequenced by this tool: they are processed in file order.)
     """
     aparser = ArgumentParser(description=main.__doc__)
     aparser.add_argument(
