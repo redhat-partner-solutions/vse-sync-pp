@@ -9,4 +9,7 @@ REQUIREMENTS = {
     'G.8272/PRTC-B': {
         'time-error-in-locked-mode/ns': 40,
     },
+    'workload/RAN': {
+        'time-error-in-locked-mode/ns': 100,
+    },
 }
