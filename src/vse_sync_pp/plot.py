@@ -1,6 +1,6 @@
 ### SPDX-License-Identifier: GPL-2.0-or-later
 
-"""Plot logged data"""
+"""Plot data parsed from log messages from a single source."""
 
 from argparse import ArgumentParser
 
@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 from .common import open_input
 
-from .parse import PARSERS
+from .parsers import PARSERS
 
 class Plotter():
     """Rudimentary plotter of data values against timestamp"""
@@ -44,23 +44,26 @@ class Plotter():
         plt.savefig(filename)
 
 def main():
-    """Plot data parsed from log messages to image file"""
+    """Plot data parsed from log messages from a single source.
+
+    Plot data parsed from the log messages in input to an image file.
+    """
     aparser = ArgumentParser(description=main.__doc__)
     aparser.add_argument(
         '-c', '--canonical', action='store_true',
-        help="parse canonical log data from input",
+        help="input contains canonical data",
     )
     aparser.add_argument(
         'input',
-        help="log file to parse, or '-' to read from stdin",
+        help="input file, or '-' to read from stdin",
     )
     aparser.add_argument(
         'parser', choices=tuple(PARSERS),
-        help="data to parse from the log file",
+        help="data to parse from input",
     )
     aparser.add_argument(
         'output',
-        help="filename to output image to",
+        help="output image filename",
     )
     args = aparser.parse_args()
     parser = PARSERS[args.parser]()
