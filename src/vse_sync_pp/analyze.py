@@ -2,12 +2,12 @@
 
 """Analyze log messages from a single source."""
 
-import json
 from argparse import ArgumentParser
+import sys
 
 from .common import (
     open_input,
-    JsonEncoder,
+    print_loj,
 )
 
 from .parsers import PARSERS
@@ -52,7 +52,9 @@ def main():
         'reason': analyzer.reason,
         'analysis': analyzer.analysis,
     }
-    print(json.dumps(dct, cls=JsonEncoder))
+    # Python exits with error code 1 on EPIPE
+    if not print_loj(dct):
+        sys.exit(1)
 
 if __name__ == '__main__':
     main()

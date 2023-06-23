@@ -3,12 +3,11 @@
 """Parse log messages from a single source."""
 
 from argparse import ArgumentParser
-
-import json
+import sys
 
 from .common import (
     open_input,
-    JsonEncoder,
+    print_loj,
 )
 
 from .parsers import PARSERS
@@ -36,7 +35,9 @@ def main():
     parser = PARSERS[args.parser]()
     with open_input(args.input) as fid:
         for data in parser.parse(fid, relative=args.relative):
-            print(json.dumps(data, cls=JsonEncoder))
+            # Python exits with error code 1 on EPIPE
+            if not print_loj(data):
+                sys.exit(1)
 
 if __name__ == '__main__':
     main()

@@ -24,3 +24,23 @@ class JsonEncoder(json.JSONEncoder):
         if isinstance(o, Decimal):
             return float(o)
         return super().default(o)
+
+def print_loj(val, encoder_cls=JsonEncoder, flush=True):
+    """Print value `val` as a line of JSON and, optionally, `flush` stdout.
+
+    If SIGPIPE is received then set `sys.stdout` to None and return False:
+    otherwise return True.
+
+    The Python recommendation suggests this clean up on SIGPIPE:
+    https://docs.python.org/3/library/signal.html#note-on-sigpipe
+
+    However this code uses setting `sys.stdout` to None as per:
+    https://stackoverflow.com/questions/26692284/\
+    how-to-prevent-brokenpipeerror-when-doing-a-flush-in-python
+    """
+    try:
+        print(json.dumps(val, cls=encoder_cls), flush=flush)
+        return True
+    except BrokenPipeError:
+        sys.stdout = None
+        return False
