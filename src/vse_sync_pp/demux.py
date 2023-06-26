@@ -1,6 +1,6 @@
 ### SPDX-License-Identifier: GPL-2.0-or-later
 
-"""Demultiplex log messages from a multiplexed source."""
+"""Demultiplex log messages from a single multiplexed source."""
 
 from argparse import ArgumentParser
 
@@ -15,7 +15,7 @@ from .parsers import PARSERS
 from .source import muxed
 
 def main():
-    """Demultiplex log messages from a multiplexed source.
+    """Demultiplex log messages from a single multiplexed source.
 
     Demultiplex log messages for the specified parser from the multiplexed
     content in input. For each demultiplexed log message print the canonical
