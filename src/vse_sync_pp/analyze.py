@@ -1,6 +1,6 @@
 ### SPDX-License-Identifier: GPL-2.0-or-later
 
-"""Analyze log messages"""
+"""Analyze log messages from a single source."""
 
 import json
 from argparse import ArgumentParser
@@ -10,29 +10,22 @@ from .common import (
     JsonEncoder,
 )
 
-from .parse import PARSERS
-
-from .analyzers.analyzer import Config
+from .parsers import PARSERS
 from .analyzers import (
-    gnss,
-    ppsdpll,
-    ts2phc,
+    ANALYZERS,
+    Config,
 )
 
-ANALYZERS = {
-    cls.id_: cls for cls in (
-        gnss.TimeErrorAnalyzer,
-        ppsdpll.TimeErrorAnalyzer,
-        ts2phc.TimeErrorAnalyzer,
-    )
-}
-
 def main():
-    """Print test analysis of data parsed from log messages to stdout"""
+    """Analyze log messages from a single source.
+
+    Analyze data parsed from the log messages in input. Print the test result
+    and data analysis as JSON.
+    """
     aparser = ArgumentParser(description=main.__doc__)
     aparser.add_argument(
         '--canonical', action='store_true',
-        help="parse canonical log data from input",
+        help="input contains canonical data",
     )
     aparser.add_argument(
         '--config',
@@ -40,11 +33,11 @@ def main():
     )
     aparser.add_argument(
         'input',
-        help="data parsed or '-' to read from stdin",
+        help="input file, or '-' to read from stdin",
     )
     aparser.add_argument(
         'analyzer', choices=tuple(ANALYZERS),
-        help="analyzer to run",
+        help="analyzer to run over input",
     )
     args = aparser.parse_args()
     config = Config.from_yaml(args.config) if args.config else Config()
