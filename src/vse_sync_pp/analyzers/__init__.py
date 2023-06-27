@@ -8,6 +8,7 @@ from . import (
     gnss,
     ppsdpll,
     ts2phc,
+    phc2sys,
 )
 
 ANALYZERS = {
@@ -15,5 +16,6 @@ ANALYZERS = {
         gnss.TimeErrorAnalyzer,
         ppsdpll.TimeErrorAnalyzer,
         ts2phc.TimeErrorAnalyzer,
+        phc2sys.TimeErrorAnalyzer,
     )
 }

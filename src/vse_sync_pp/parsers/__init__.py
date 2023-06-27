@@ -5,11 +5,13 @@
 from . import dpll
 from . import gnss
 from . import ts2phc
+from . import phc2sys
 
 PARSERS = {
     cls.id_: cls for cls in (
         dpll.TimeErrorParser,
         gnss.TimeErrorParser,
         ts2phc.TimeErrorParser,
+        phc2sys.TimeErrorParser,
     )
 }
