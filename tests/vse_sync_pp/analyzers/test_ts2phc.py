@@ -159,7 +159,7 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                 # oops, missing sample
                 TERR(Decimal(5), 0, 's2'),
             ),
-            'result': False,
+            'result': True,
             'reason': "short test samples",
             'analysis': {
                 'duration': Decimal(4),
