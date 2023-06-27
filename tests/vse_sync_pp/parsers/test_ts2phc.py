@@ -21,6 +21,10 @@ class TestTimeErrorParser(TestCase, metaclass=ParserTestBuilder):
             'ens7f1 master offset          0 s2 freq      -0',
             (Decimal('681011.839'), 'ens7f1', 0, 's2'),
         ),
+        (   'ts2phc[681011.839]: '
+            'ens7f1 master offset          0 s2 freq      -0',
+            (Decimal('681011.839'), 'ens7f1', 0, 's2'),
+        ),
     )
     reject = ()
     discard = (

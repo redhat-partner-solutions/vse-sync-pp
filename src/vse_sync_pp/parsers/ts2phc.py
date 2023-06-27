@@ -19,14 +19,14 @@ class TimeErrorParser(Parser):
 
         If `interface` then only parse lines for the specified interface.
         """
-        return r'\s'.join((
+        return r''.join((
             r'^ts2phc' +
             r'\[([1-9][0-9]*\.[0-9]{3})\]:', # timestamp
-            r'\[ts2phc\.0\..*\]',
-            fr'({interface})' if interface else r'(\S+)', # interface
-            r'master offset\s*',
-            r'(-?[0-9]+)', # time error
-            r'(\S+)', # state
+            r'(?:\s\[ts2phc\.0\..*\])?',
+            fr'\s({interface})' if interface else r'\s(\S+)', # interface
+            r'\smaster offset\s*',
+            r'\s(-?[0-9]+)', # time error
+            r'\s(\S+)', # state
             r'.*$',
         ))
     def __init__(self, interface=None):
