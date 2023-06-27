@@ -3,13 +3,13 @@
 """Sequence log messages from multiple sources."""
 
 from argparse import ArgumentParser
-
+import sys
 from sys import stdin
-import json
+
 from collections import namedtuple
 import yaml
 
-from .common import JsonEncoder
+from .common import print_loj
 
 from .parsers import PARSERS
 from .source import (
@@ -125,7 +125,9 @@ def main():
         first = heads.pop(0)
         if first.id_ in emit:
             obj = {'id': first.id_, 'data': first.data}
-            print(json.dumps(obj, cls=JsonEncoder))
+            # Python exits with error code 1 on EPIPE
+            if not print_loj(obj):
+                sys.exit(1)
         heads = insert_head(heads, build_head(first.source))
 
 if __name__ == '__main__':
