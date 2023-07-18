@@ -24,7 +24,7 @@ class TimeErrorParser(Parser):
             r'(-?[0-9]+)', # time error
             r'(\S+)', # state
             r'freq\s*',
-            r'(\+?[0-9]+)', # frequency error
+            r'([-+]?[0-9]+)', # frequency error
             r'delay\s*',
             r'(-?[0-9]+)' + # delay
             r'\s*.*$',
