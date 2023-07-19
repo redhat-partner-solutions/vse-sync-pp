@@ -13,7 +13,7 @@ class TimeErrorParser(Parser):
     y_name = 'terror'
     parsed = namedtuple('Parsed', elems)
     def make_parsed(self, elems):
-        if len(elems) != len(self.elems):
+        if len(elems) < len(self.elems):
             raise ValueError(elems)
         timestamp = parse_timestamp(elems[0])
         eecstate = int(elems[1])

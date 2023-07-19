@@ -18,6 +18,10 @@ class TestTimeErrorParser(TestCase, metaclass=ParserTestBuilder):
     elems = ('timestamp', 'eecstate', 'state', 'terror')
     accept = (
         (
+            '1876878.28,3,3,-0.79,-3.21',
+            (Decimal('1876878.28'), 3, 3, Decimal('-0.79')),
+        ),
+        (
             '1876878.28,3,3,-0.79',
             (Decimal('1876878.28'), 3, 3, Decimal('-0.79')),
         ),
@@ -25,7 +29,6 @@ class TestTimeErrorParser(TestCase, metaclass=ParserTestBuilder):
     reject = (
         'foo bar baz',
         '3,3,-0.79',
-        '1876878.28,3,3,-0.79,9',
         'quux,3,3,-0.79',
         '1876878.28,quux,3,-0.79',
         '1876878.28,3,quux,-0.79',
@@ -36,9 +39,11 @@ class TestTimeErrorParser(TestCase, metaclass=ParserTestBuilder):
         '\n'.join((
             '1876878.28,3,3,-0.79',
             '1876879.29,3,3,-1.05',
+            '1876879.29,3,3,-0.79,-3.21',
         )),
         (
             (Decimal('1876878.28'), 3, 3, Decimal('-0.79')),
             (Decimal('1876879.29'), 3, 3, Decimal('-1.05')),
+            (Decimal('1876879.29'), 3, 3, Decimal('-0.79')),
         ),
     )
