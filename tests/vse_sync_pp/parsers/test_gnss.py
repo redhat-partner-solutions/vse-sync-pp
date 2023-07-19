@@ -32,6 +32,9 @@ class TestTimeErrorParser(TestCase, metaclass=ParserTestBuilder):
             '2023-06-16T17:01:11.131282269+00:00,3,398',
             (Decimal('1686934871.131282269'), 3, 398),
         ),
+        (   '681011.839,5,-3,-2.72',
+            (Decimal('681011.839'), 5, -3),
+        ),
     )
     reject = (
         'foo bar baz',
@@ -49,9 +52,12 @@ class TestTimeErrorParser(TestCase, metaclass=ParserTestBuilder):
         '\n'.join((
             '847914.839,3,4',
             '847915.839,5,-1',
+            '847915.839,5,-1,-1',
+
         )),
         (
             (Decimal('847914.839'), 3, 4),
+            (Decimal('847915.839'), 5, -1),
             (Decimal('847915.839'), 5, -1),
         ),
     )

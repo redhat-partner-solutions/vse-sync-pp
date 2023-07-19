@@ -33,7 +33,7 @@ class TimeErrorParser(Parser):
         super().__init__()
         self._regexp = re.compile(self.build_regexp())
     def make_parsed(self, elems):
-        if len(elems) != len(self.elems):
+        if len(elems) < len(self.elems):
             raise ValueError(elems)
         timestamp = parse_decimal(elems[0])
         terror = int(elems[1])

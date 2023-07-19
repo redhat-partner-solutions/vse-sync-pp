@@ -102,8 +102,6 @@ class ParserTestBuilder(type):
             self.assertEqual(parser.make_parsed(expect), expect)
             with self.assertRaises(ValueError):
                 parser.make_parsed(expect[:-1])
-            with self.assertRaises(ValueError):
-                parser.make_parsed(expect + (expect[-1],))
         method.__doc__ = f'Test {fqname} make parsed'
         return method
     @staticmethod
