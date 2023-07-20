@@ -47,5 +47,9 @@ def muxed(file, parsers):
         except KeyError:
             pass
         else:
-            data = parser.make_parsed(obj['data'])
-            yield (id_, data)
+            if isinstance(obj['data'], dict):
+                data = tuple(obj['data'][name] for  name in parser.elems)
+            else:
+                data = obj['data']
+            parsed = parser.make_parsed(data)
+            yield (id_, parsed)
