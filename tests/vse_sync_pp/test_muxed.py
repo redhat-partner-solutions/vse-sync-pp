@@ -1,4 +1,7 @@
 ### SPDX-License-Identifier: GPL-2.0-or-later
+
+"""Test cases for vse_sync_pp.source.muxed"""
+
 import json
 from collections import namedtuple
 from decimal import Decimal
@@ -8,8 +11,6 @@ from unittest import TestCase
 
 from vse_sync_pp.parsers import PARSERS
 from vse_sync_pp.source import muxed
-
-"""Test cases for vse_sync_pp.source.muxed"""
 
 CaseValue = namedtuple("CaseValue", "input,expected")
 NO_PARSER = CaseValue(
@@ -41,17 +42,32 @@ DPLL_DICT = CaseValue(
 GNSS_LIST = CaseValue(
     {
         "id": "gnss/time-error",
-        "data": ["681011.839", "5", "-3"],
+        "data": ["681011.839", "5",  "2", "-3"],
     },
-    ("gnss/time-error", (Decimal("681011.839"), 5, -3)),
+    ("gnss/time-error", (Decimal("681011.839"), 5,  2)),
 )
+
+GNSS_DICT = CaseValue(
+    {
+        "id": "gnss/time-error",
+        "data": {
+            "timestamp": "681011.839", 
+            "state": "5",
+            "terror": "2", 
+            "ferror": "-3",
+        },  
+    },
+    ("gnss/time-error", (Decimal("681011.839"), 5, 2)),
+)
+
+
 
 
 class TestMuxed(TestCase):
     def _test(self, *cases):
         file = StringIO("\n".join(json.dumps(c.input) for c in cases))
 
-        parsers = dict()
+        parsers = {}
         for case in cases:
             key = case.input["id"]
             if key in PARSERS:
@@ -73,7 +89,7 @@ class TestMuxed(TestCase):
 
     def test_dict(self):
         """Check that lines with json objects are ingested properly"""
-        self._test(DPLL_DICT)
+        self._test(DPLL_DICT, GNSS_DICT)
 
     def test_mixed(self):
         """Check that muxed can process a mixture of lines with json 

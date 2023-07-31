@@ -30,8 +30,12 @@ def muxed(file, parsers):
     line is discarded: otherwise a pair is generated.
 
     `id_` is the value at 'id';
-    `data` is canonical data produced by the parser at `id_` in `parsers` for
-    the value at 'data'.
+    `data`  the values within data must be the equivalent to  canonical data 
+    produced by the parser at `id_` in `parsers` for the value at 'data'. 
+    They can be in the form of a JSON array or a JSON object. 
+    If the data is a JSON array then the ordering must match the parser output.
+    If the data is a JSON object then the names must match the parser output.
+
 
     `file` is closed just before returning.
     """
