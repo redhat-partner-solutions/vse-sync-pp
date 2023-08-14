@@ -19,7 +19,7 @@ class TimeErrorParser(Parser):
         return r'\s'.join((
             r'^phc2sys' +
             r'\[([1-9][0-9]*\.[0-9]{3})\]:'+  # timestamp
-            r'(?:\s\[ptp4l\.0\..*\])?',
+            r'(?:\s\[ptp4l\.\d\..*\])?',  # configuration file name
             r'CLOCK_REALTIME phc offset\s*',
             r'(-?[0-9]+)', # time error
             r'(\S+)', # state

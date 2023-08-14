@@ -30,6 +30,10 @@ class TestTimeErrorParser(TestCase, metaclass=ParserTestBuilder):
             'CLOCK_REALTIME phc offset         8 s2 freq   -6339 delay    502',
             (Decimal('681011.839'), 8, 's2', 502),
         ),
+        (   'phc2sys[681012.839]: [ptp4l.1.config] '
+            'CLOCK_REALTIME phc offset         8 s2 freq   -6339 delay    502',
+            (Decimal('681012.839'), 8, 's2', 502),
+        ),
         (
             'phc2sys[847916.839]: '
             'CLOCK_REALTIME phc offset          4 s2 freq      -639 delay    102',
