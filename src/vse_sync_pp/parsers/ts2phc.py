@@ -22,7 +22,7 @@ class TimeErrorParser(Parser):
         return r''.join((
             r'^ts2phc' +
             r'\[([1-9][0-9]*\.[0-9]{3})\]:', # timestamp
-            r'(?:\s\[ts2phc\.0\..*\])?',
+            r'(?:\s\[ts2phc\.\d\..*\])?',  # configuration file name
             fr'\s({interface})' if interface else r'\s(\S+)', # interface
             r'\smaster offset\s*',
             r'\s(-?[0-9]+)', # time error
