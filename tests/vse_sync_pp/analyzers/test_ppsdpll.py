@@ -57,12 +57,40 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             },
             'rows': (
                 DPLLS(Decimal('1876878.28'), 3, 3, Decimal(1)),
-                # state 2 causes failure
-                DPLLS(Decimal('1876879.28'), 3, 2, Decimal(1)),
+                # oops going into freerun
+                DPLLS(Decimal('1876879.28'), 3, 1, Decimal(1)),
                 DPLLS(Decimal('1876880.28'), 3, 3, Decimal(1)),
             ),
             'result': False,
             'reason': "loss of lock",
+            'analysis': {
+                'duration': Decimal(1.0),
+                'terror': {
+                    'units': 'ns',
+                    'min': 1.0,
+                    'max': 1.0,
+                    'range': 0.0,
+                    'mean': 1.0,
+                    'stddev': 0.0,
+                    'variance': 0.0,
+                },
+            },
+        },
+        {
+            'requirements': 'G.8272/PRTC-B',
+            'parameters': {
+                'time-error-limit/%': 100,
+                'transient-period/s': 1,
+                'min-test-duration/s': 1,
+            },
+            'rows': (
+                # state 2 does not cause failure
+                DPLLS(Decimal('1876878.28'), 3, 2, Decimal(1)),
+                DPLLS(Decimal('1876879.28'), 3, 3, Decimal(1)),
+                DPLLS(Decimal('1876880.28'), 3, 3, Decimal(1)),
+            ),
+            'result': True,
+            'reason': None,
             'analysis': {
                 'duration': Decimal(1.0),
                 'terror': {
