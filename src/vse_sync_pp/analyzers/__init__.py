@@ -9,6 +9,7 @@ from . import (
     ppsdpll,
     ts2phc,
     phc2sys,
+    pmc,
 )
 
 ANALYZERS = {
@@ -17,5 +18,6 @@ ANALYZERS = {
         ppsdpll.TimeErrorAnalyzer,
         ts2phc.TimeErrorAnalyzer,
         phc2sys.TimeErrorAnalyzer,
+        pmc.ClockStateAnalyzer,
     )
 }
