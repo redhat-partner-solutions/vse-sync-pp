@@ -13,9 +13,13 @@ from .parsers import PARSERS
 
 class Plotter():
     """Rudimentary plotter of data values against timestamp"""
-    def __init__(self, y_name):
+    def __init__(self, y_name, y_desc=None):
         self._x_name = 'timestamp'
         self._y_name = y_name
+        if y_desc is None:
+          self._y_desc = y_name
+        else:
+          self._y_desc = y_desc
         self._x_data = []
         self._y_data = []
     def append(self, data):
@@ -33,14 +37,14 @@ class Plotter():
             ax1.set_yscale('symlog', linthresh=10)
         ax1.plot(self._x_data, self._y_data, '.')
         ax1.grid()
-        ax1.set_title(f'{self._x_name} vs {self._y_name}')
+        ax1.set_title(f'{self._x_name} vs {self._y_desc}')
         counts, bins = np.histogram(
             np.array(self._y_data, dtype=float),
             bins='scott',
         )
         ax2.hist(bins[:-1], bins, weights=counts)
         ax2.set_yscale('symlog', linthresh=10)
-        ax2.set_title(f'Histogram of {self._y_name}')
+        ax2.set_title(f'Histogram of {self._y_desc}')
         plt.savefig(filename)
 
 def main():
