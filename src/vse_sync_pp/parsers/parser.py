@@ -55,6 +55,15 @@ def parse_timestamp(val):
     """Return a :class:`Decimal` from absolute or relative timestamp `val`"""
     return parse_timestamp_abs(val) or parse_decimal(val)
 
+def relative_timestamp(parsed, tzero):
+    """Return relative timestamp with respect to `tzero` coming from `parsed`"""
+    timestamp = getattr(parsed, 'timestamp', None)
+    if timestamp is not None:
+        if tzero is None:
+            tzero = timestamp
+        parsed = parsed._replace(timestamp=timestamp - tzero)
+    return tzero, parsed
+
 class Parser():
     """A base class providing common parser functionality"""
     def make_parsed(self, elems): # pylint: disable=no-self-use
@@ -83,21 +92,23 @@ class Parser():
             parsed = self.parse_line(line) # pylint: disable=assignment-from-none
             if parsed is not None:
                 if relative:
-                    timestamp = getattr(parsed, 'timestamp', None)
-                    if timestamp is not None:
-                        if tzero is None:
-                            tzero = timestamp
-                        parsed = parsed._replace(timestamp=timestamp - tzero)
-                yield parsed
-    def canonical(self, file):
+                    tzero, parsed = relative_timestamp(parsed, tzero)
+            yield parsed
+    def canonical(self, file, relative=False):
         """Parse canonical data from `file` object.
 
         The canonical representation is JSON-encoded parsed data, with one
-        parsed item per line in `file`.
+        parsed item per line in `file`. If `relative` is truthy, then present
+        all timestamps relative to the first accepted line's timestamp.
 
         This method is a generator yielding a namedtuple value for each line in
         `file`.
         """
+        tzero = None
         for line in file:
             obj = json.loads(line, parse_float=Decimal)
-            yield self.make_parsed(obj)
+            parsed = self.make_parsed(obj)
+            if parsed is not None:
+                if relative:
+                    tzero, parsed = relative_timestamp(parsed, tzero)
+            yield parsed
