@@ -93,7 +93,7 @@ class Parser():
             if parsed is not None:
                 if relative:
                     tzero, parsed = relative_timestamp(parsed, tzero)
-            yield parsed
+                yield parsed
     def canonical(self, file, relative=False):
         """Parse canonical data from `file` object.
 
@@ -111,4 +111,4 @@ class Parser():
             if parsed is not None:
                 if relative:
                     tzero, parsed = relative_timestamp(parsed, tzero)
-            yield parsed
+                yield parsed
