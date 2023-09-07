@@ -129,8 +129,9 @@ class AnalyzerTestBuilder(type):
     `constructor` - a callable returning the analyzer to test
     `id_` - the expected value of analyzer class attribute `id_`
     `parser` - the expected value of analyzer class attribute `parser`
-    `expect` - dict of requirements, parameters, rows, result, reason, analysis
-               giving test config, input data, expected outputs
+    `expect` - dict of requirements, parameters, rows, result, reason,
+               timestamp, duration, analysis giving test config, input data,
+               expected outputs
     """
     def __new__(cls, name, bases, dct): # pylint: disable=bad-mcs-classmethod-argument
         constructor = dct['constructor']
@@ -179,12 +180,16 @@ class AnalyzerTestBuilder(type):
             rows = dct['rows']
             result = dct['result']
             reason = dct['reason']
+            timestamp = dct.get('timestamp')
+            duration = dct.get('duration')
             analysis = dct['analysis']
             config = Config(None, requirements, parameters)
             analyzer = constructor(config)
             analyzer.collect(*rows)
             self.assertEqual(analyzer.result, result)
             self.assertEqual(analyzer.reason, reason)
+            self.assertEqual(analyzer.timestamp, timestamp)
+            self.assertEqual(analyzer.duration, duration)
             self.assertEqual(analyzer.analysis, analysis)
             with self.assertRaises(CollectionIsClosed):
                 analyzer.collect(*rows)
