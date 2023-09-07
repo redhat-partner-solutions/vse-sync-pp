@@ -66,6 +66,8 @@ class Analyzer():
         self._data = None
         self._result = None
         self._reason = None
+        self._timestamp = None
+        self._duration = None
         self._analysis = None
     def collect(self, *rows):
         """Collect data from `rows`"""
@@ -102,6 +104,16 @@ class Analyzer():
         """A string qualifying :attr:`result` (or None if unqualified)"""
         self._test()
         return self._reason
+    @property
+    def timestamp(self):
+        """The ISO 8601 date-time timestamp, when the test started"""
+        self._test()
+        return self._timestamp
+    @property
+    def duration(self):
+        """The test duration in seconds"""
+        self._test()
+        return self._duration
     @property
     def analysis(self):
         """A structured analysis of the collected data"""
@@ -159,7 +171,7 @@ class TimeErrorAnalyzerBase(Analyzer):
         # samples in the initial transient period are ignored
         self._transient = config.parameter('transient-period/s')
         # minimum test duration for a valid test
-        self._duration = config.parameter('min-test-duration/s')
+        self._duration_min = config.parameter('min-test-duration/s')
     def prepare(self, rows):
         idx = 0
         try:
@@ -181,9 +193,9 @@ class TimeErrorAnalyzerBase(Analyzer):
         terr_max = data.terror.max()
         if self._unacceptable <= max(abs(terr_min), abs(terr_max)):
             return (False, "unacceptable time error")
-        if data.iloc[-1].timestamp - data.iloc[0].timestamp < self._duration:
+        if data.iloc[-1].timestamp - data.iloc[0].timestamp < self._duration_min:
             return (False, "short test duration")
-        if len(data) - 1 < self._duration:
+        if len(data) - 1 < self._duration_min:
             return (False, "short test samples")
         return (True, None)
     def explain(self, data):
