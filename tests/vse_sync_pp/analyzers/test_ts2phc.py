@@ -31,6 +31,8 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             'rows': (),
             'result': False,
             'reason': "no data",
+            'timestamp': None,
+            'duration': None,
             'analysis': {},
         },
         {
@@ -50,6 +52,8 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': False,
             'reason': "no data",
+            'timestamp': None,
+            'duration': None,
             'analysis': {},
         },
         {
@@ -70,8 +74,9 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': False,
             'reason': "loss of lock",
+            'timestamp': Decimal(1),
+            'duration': Decimal(4),
             'analysis': {
-                'duration': Decimal(4),
                 'terror': {
                     'units': 'ns',
                     'min': 0,
@@ -101,8 +106,9 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': False,
             'reason': "unacceptable time error",
+            'timestamp': Decimal(1),
+            'duration': Decimal(4),
             'analysis': {
-                'duration': Decimal(4),
                 'terror': {
                     'units': 'ns',
                     'min': 0,
@@ -131,8 +137,9 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': False,
             'reason': "short test duration",
+            'timestamp': Decimal(1),
+            'duration': Decimal(3),
             'analysis': {
-                'duration': Decimal(3),
                 'terror': {
                     'units': 'ns',
                     'min': 0,
@@ -161,8 +168,9 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': False,
             'reason': "short test samples",
+            'timestamp': Decimal(1),
+            'duration': Decimal(4),
             'analysis': {
-                'duration': Decimal(4),
                 'terror': {
                     'units': 'ns',
                     'min': 0,
@@ -191,8 +199,9 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': True,
             'reason': None,
+            'timestamp': Decimal(1),
+            'duration': Decimal(4),
             'analysis': {
-                'duration': Decimal(4),
                 'terror': {
                     'units': 'ns',
                     'min': 0,

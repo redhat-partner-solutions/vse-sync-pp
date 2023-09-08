@@ -195,6 +195,8 @@ class AnalyzerTestBuilder(type):
                 analyzer.collect(*rows)
             self.assertEqual(analyzer.result, result)
             self.assertEqual(analyzer.reason, reason)
+            self.assertEqual(analyzer.timestamp, timestamp)
+            self.assertEqual(analyzer.duration, duration)
             self.assertEqual(analyzer.analysis, analysis)
         method.__doc__ = f'Test {fqname} analyzer test result and analysis'
         return method
