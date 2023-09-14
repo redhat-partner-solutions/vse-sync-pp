@@ -49,6 +49,8 @@ def main():
             analyzer.collect(parsed)
     dct = {
         'result': analyzer.result,
+        'timestamp': analyzer.timestamp,
+        'duration': analyzer.duration,
         'reason': analyzer.reason,
         'analysis': analyzer.analysis,
     }
