@@ -19,5 +19,13 @@ ANALYZERS = {
         ts2phc.TimeErrorAnalyzer,
         phc2sys.TimeErrorAnalyzer,
         pmc.ClockStateAnalyzer,
+        gnss.TimeDeviationAnalyzer,
+        ppsdpll.TimeDeviationAnalyzer,
+        ts2phc.TimeDeviationAnalyzer,
+        phc2sys.TimeDeviationAnalyzer,
+        gnss.MaxTimeIntervalErrorAnalyzer,
+        ppsdpll.MaxTimeIntervalErrorAnalyzer,
+        ts2phc.MaxTimeIntervalErrorAnalyzer,
+        phc2sys.MaxTimeIntervalErrorAnalyzer,
     )
 }

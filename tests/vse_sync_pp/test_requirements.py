@@ -13,18 +13,35 @@ class TestRequirements(TestCase):
     """Test cases for vse_sync_pp.requirements.REQUIREMENTS"""
     def test_g8272_prtc_a(self):
         """Test G.8272/PRTC-A requirement values"""
-        self.assertEqual(
-            REQUIREMENTS['G.8272/PRTC-A'],
-            {
-                'time-error-in-locked-mode/ns': 100,
-            },
-        )
+
+        self.assertEqual(REQUIREMENTS['G.8272/PRTC-A']['time-error-in-locked-mode/ns'], 100)
+
+        (interval1, func1), (interval2, func2) = REQUIREMENTS['G.8272/PRTC-A']['maximum-time-interval-error-in-locked-mode/us'].items() # noqa
+
+        # floating point math representation
+        self.assertEqual(func1(100), 0.052500000000000005)
+        self.assertEqual(func2(300), 0.10)
+
+        (interval1, func1), (interval2, func2), (interval3, func3) = REQUIREMENTS['G.8272/PRTC-A']['time-deviation-in-locked-mode/ns'].items() # noqa
+        self.assertEqual(func1(100), 3)
+        self.assertEqual(func2(150), 4.5)
+        self.assertEqual(func3(550), 30)
 
     def test_g8272_prtc_b(self):
         """Test G.8272/PRTC-B requirement values"""
-        self.assertEqual(
-            REQUIREMENTS['G.8272/PRTC-B'],
-            {
-                'time-error-in-locked-mode/ns': 40,
-            },
-        )
+
+        self.assertEqual(REQUIREMENTS['G.8272/PRTC-B']['time-error-in-locked-mode/ns'], 40)
+
+        (a, f1), (c, f2) = REQUIREMENTS['G.8272/PRTC-B']['maximum-time-interval-error-in-locked-mode/us'].items()
+
+        self.assertEqual(f1(100), 0.052500000000000005)
+        self.assertEqual(f2(300), 0.04)
+
+        (a, f1), (c, f2), (e, f3) = REQUIREMENTS['G.8272/PRTC-B']['time-deviation-in-locked-mode/ns'].items()
+        self.assertEqual(f1(100), 1)
+        self.assertEqual(f2(150), 1.5)
+        self.assertEqual(f3(550), 5)
+
+    def test_workload_RAN(self):
+        """Test workload/RAN requirement values"""
+        self.assertEqual(REQUIREMENTS['workload/RAN']['time-error-in-locked-mode/ns'], 100)
