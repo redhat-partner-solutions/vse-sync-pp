@@ -101,6 +101,30 @@ class Analyzer():
             self._analysis = self.explain(self._data)
             self._timestamp = self._analysis.pop('timestamp', None)
             self._duration = self._analysis.pop('duration', None)
+    def _timestamp_from_dec(self, dec):
+        """Return an absolute timestamp or decimal timestamp from `dec`.
+
+        If `dec` is large enough to represent 2023 (the year this was coded),
+        or a later year, then assume it represents an absolute date-time. (This
+        is >53 years if counting seconds from zero.) Otherwise assume relative
+        time.
+
+        >>> today = datetime.now()
+        >>> today
+        datetime.datetime(2023, 9, 8, 16, 49, 54, 735285)
+        >>> ts = today.timestamp()
+        >>> ts
+        1694188194.735285
+        >>> ts / (365 * 24 * 60 * 60)
+        53.72235523640554
+        """
+        # `dtv` is a timezone-aware datetime value with resolution of seconds
+        dtv = datetime.fromtimestamp(int(dec), tz=timezone.utc)
+        if datetime.now().year - dtv.year <= 1:
+            # absolute date-time
+            return dtv.isoformat()
+        # relative time
+        return dec
     @property
     def result(self):
         """The boolean result from this analyzer's test of the collected data"""
@@ -206,28 +230,8 @@ class TimeErrorAnalyzerBase(Analyzer):
     def explain(self, data):
         if len(data) == 0:
             return {}
-        dec = data.iloc[0].timestamp
-        # datetime value with resolution of seconds
-        dtv = datetime.fromtimestamp(int(dec), tz=timezone.utc)
-        # Assume that if `dec` is large enough to be 2023 (the year this was
-        # coded), or a later year, then it represents an absolute date-time.
-        # This is >53 years if counting seconds from zero.  
-        # Assume relative time in any other case.
-        #
-        # >>> today = datetime.now()
-        # >>> today
-        # datetime.datetime(2023, 9, 8, 16, 49, 54, 735285)
-        # >>> ts = today.timestamp()
-        # >>> ts
-        # 1694188194.735285
-        # >>> ts / (365 * 24 * 60 * 60)
-        # 53.72235523640554
-        if datetime.now().year - dtv.year <= 1:
-            timestamp = dtv.isoformat()
-        else:
-            timestamp = dec
         return {
-            'timestamp': timestamp,
+            'timestamp': self._timestamp_from_dec(data.iloc[0].timestamp),
             'duration': data.iloc[-1].timestamp - data.iloc[0].timestamp,
             'terror': self._statistics(data.terror, 'ns'),
         }

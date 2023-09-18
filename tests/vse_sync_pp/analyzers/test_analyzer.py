@@ -180,8 +180,8 @@ class AnalyzerTestBuilder(type):
             rows = dct['rows']
             result = dct['result']
             reason = dct['reason']
-            timestamp = dct.get('timestamp')
-            duration = dct.get('duration')
+            timestamp = dct['timestamp']
+            duration = dct['duration']
             analysis = dct['analysis']
             config = Config(None, requirements, parameters)
             analyzer = constructor(config)
