@@ -138,6 +138,7 @@ class ClockStateAnalyzer(Analyzer):
             return {}
 
         return {
+            'timestamp': self._timestamp_from_dec(data.iloc[0].timestamp),
             'duration': data.iloc[-1].timestamp - data.iloc[0].timestamp,
             'clock_class_count': get_named_clock_class_result(self.clock_class_count),
             'total_transitions': self.transition_count,

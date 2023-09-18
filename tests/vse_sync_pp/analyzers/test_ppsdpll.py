@@ -30,6 +30,8 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             'rows': (),
             'result': False,
             'reason': "no data",
+            'timestamp': None,
+            'duration': None,
             'analysis': {},
         },
         {
@@ -46,6 +48,8 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': False,
             'reason': "no data",
+            'timestamp': None,
+            'duration': None,
             'analysis': {},
         },
         {
@@ -63,8 +67,9 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': False,
             'reason': "loss of lock",
+            'timestamp': Decimal('1876879.28'),
+            'duration': Decimal(1),
             'analysis': {
-                'duration': Decimal(1.0),
                 'terror': {
                     'units': 'ns',
                     'min': 1.0,
@@ -91,8 +96,9 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': True,
             'reason': None,
+            'timestamp': Decimal('1876879.28'),
+            'duration': Decimal(1),
             'analysis': {
-                'duration': Decimal(1.0),
                 'terror': {
                     'units': 'ns',
                     'min': 1.0,
@@ -120,8 +126,9 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': False,
             'reason': "unacceptable time error",
+            'timestamp': Decimal('1876878.28'),
+            'duration': Decimal(2),
             'analysis': {
-                'duration': Decimal(2.0),
                 'terror': {
                     'units': 'ns',
                     'min': -40.0,
@@ -149,8 +156,9 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': False,
             'reason': "short test duration",
+            'timestamp': Decimal('1876878.28'),
+            'duration': Decimal(2),
             'analysis': {
-                'duration': Decimal(2.0),
                 'terror': {
                     'units': 'ns',
                     'min': 37.0,
@@ -178,8 +186,9 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': False,
             'reason': "short test samples",
+            'timestamp': Decimal('1876879.28'),
+            'duration': Decimal(3),
             'analysis': {
-                'duration': Decimal(3.0),
                 'terror': {
                     'units': 'ns',
                     'min': 1.0,
@@ -199,15 +208,16 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                 'min-test-duration/s': 1,
             },
             'rows': (
-                DPLLS(Decimal('1876878.28'), 3, 3, Decimal(1)),
-                DPLLS(Decimal('1876879.28'), 3, 3, Decimal(1)),
-                DPLLS(Decimal('1876880.28'), 3, 3, Decimal(1)),
-                DPLLS(Decimal('1876881.28'), 3, 3, Decimal(1)),
+                DPLLS(Decimal('1695047659.996251'), 3, 3, Decimal(1)),
+                DPLLS(Decimal('1695047660.996251'), 3, 3, Decimal(1)),
+                DPLLS(Decimal('1695047661.996251'), 3, 3, Decimal(1)),
+                DPLLS(Decimal('1695047662.996251'), 3, 3, Decimal(1)),
             ),
             'result': True,
             'reason': None,
+            'timestamp': '2023-09-18T14:34:20+00:00',
+            'duration': Decimal(2),
             'analysis': {
-                'duration': Decimal(2.0),
                 'terror': {
                     'units': 'ns',
                     'min': 1.0,

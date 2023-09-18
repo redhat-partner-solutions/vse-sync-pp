@@ -27,6 +27,8 @@ class TestClockStateAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             'rows': (),
             'result': False,
             'reason': "no data",
+            'timestamp': None,
+            'duration': None,
             'analysis': {},
         },
         {
@@ -40,8 +42,9 @@ class TestClockStateAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': False,
             'reason': "wrong clock class 12",
+            'timestamp': Decimal(0),
+            'duration': Decimal(1),
             'analysis': {
-                "duration": 1,
                 "clock_class_count": {
                     "FREERUN": {
                         "count": 0,
@@ -125,8 +128,9 @@ class TestClockStateAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': False,
             'reason': "illegal state transition",
+            'timestamp': Decimal(0),
+            'duration': Decimal(1),
             'analysis': {
-                "duration": 1,
                 "clock_class_count": {
                     "FREERUN": {
                         "count": 0,
@@ -210,8 +214,9 @@ class TestClockStateAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': False,
             'reason': "illegal state transition",
+            'timestamp': Decimal(0),
+            'duration': Decimal(1),
             'analysis': {
-                "duration": 1,
                 "clock_class_count": {
                     "FREERUN": {
                         "count": 0,
@@ -295,8 +300,9 @@ class TestClockStateAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': False,
             'reason': "illegal state transition",
+            'timestamp': Decimal(0),
+            'duration': Decimal(1),
             'analysis': {
-                "duration": 1,
                 "clock_class_count": {
                     "FREERUN": {
                         "count": 0,
@@ -380,8 +386,9 @@ class TestClockStateAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': False,
             'reason': "illegal state transition",
+            'timestamp': Decimal(0),
+            'duration': Decimal(1),
             'analysis': {
-                "duration": 1,
                 "clock_class_count": {
                     "FREERUN": {
                         "count": 0,
@@ -465,8 +472,9 @@ class TestClockStateAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': False,
             'reason': "illegal state transition",
+            'timestamp': Decimal(0),
+            'duration': Decimal(1),
             'analysis': {
-                "duration": 1,
                 "clock_class_count": {
                     "FREERUN": {
                         "count": 1,
@@ -550,8 +558,9 @@ class TestClockStateAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': False,
             'reason': "illegal state transition",
+            'timestamp': Decimal(0),
+            'duration': Decimal(1),
             'analysis': {
-                "duration": 1,
                 "clock_class_count": {
                     "FREERUN": {
                         "count": 0,
@@ -635,8 +644,9 @@ class TestClockStateAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': False,
             'reason': "illegal state transition",
+            'timestamp': Decimal(0),
+            'duration': Decimal(1),
             'analysis': {
-                "duration": 1,
                 "clock_class_count": {
                     "FREERUN": {
                         "count": 0,
@@ -720,8 +730,9 @@ class TestClockStateAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': False,
             'reason': "illegal state transition",
+            'timestamp': Decimal(0),
+            'duration': Decimal(1),
             'analysis': {
-                "duration": 1,
                 "clock_class_count": {
                     "FREERUN": {
                         "count": 0,
@@ -805,8 +816,9 @@ class TestClockStateAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': False,
             'reason': "illegal state transition",
+            'timestamp': Decimal(0),
+            'duration': Decimal(1),
             'analysis': {
-                "duration": 1,
                 "clock_class_count": {
                     "FREERUN": {
                         "count": 1,
@@ -890,8 +902,9 @@ class TestClockStateAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': False,
             'reason': "illegal state transition",
+            'timestamp': Decimal(0),
+            'duration': Decimal(1),
             'analysis': {
-                "duration": 1,
                 "clock_class_count": {
                     "FREERUN": {
                         "count": 1,
@@ -975,8 +988,9 @@ class TestClockStateAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': False,
             'reason': "illegal state transition",
+            'timestamp': Decimal(0),
+            'duration': Decimal(1),
             'analysis': {
-                "duration": 1,
                 "clock_class_count": {
                     "FREERUN": {
                         "count": 1,
@@ -1060,8 +1074,9 @@ class TestClockStateAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': False,
             'reason': "illegal state transition",
+            'timestamp': Decimal(0),
+            'duration': Decimal(1),
             'analysis': {
-                "duration": 1,
                 "clock_class_count": {
                     "FREERUN": {
                         "count": 1,
@@ -1145,8 +1160,9 @@ class TestClockStateAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': False,
             'reason': "illegal state transition",
+            'timestamp': Decimal(0),
+            'duration': Decimal(1),
             'analysis': {
-                "duration": 1,
                 "clock_class_count": {
                     "FREERUN": {
                         "count": 0,
@@ -1230,8 +1246,9 @@ class TestClockStateAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': False,
             'reason': "illegal state transition",
+            'timestamp': Decimal(0),
+            'duration': Decimal(1),
             'analysis': {
-                "duration": 1,
                 "clock_class_count": {
                     "FREERUN": {
                         "count": 0,
@@ -1315,8 +1332,9 @@ class TestClockStateAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': False,
             'reason': "illegal state transition",
+            'timestamp': Decimal(0),
+            'duration': Decimal(1),
             'analysis': {
-                "duration": 1,
                 "clock_class_count": {
                     "FREERUN": {
                         "count": 0,
@@ -1408,8 +1426,9 @@ class TestClockStateAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
             ),
             'result': True,
             'reason': None,
+            'timestamp': Decimal(0),
+            'duration': Decimal(10),
             'analysis': {
-                "duration": 10,
                 "clock_class_count": {
                     "FREERUN": {
                         "count": 1,
