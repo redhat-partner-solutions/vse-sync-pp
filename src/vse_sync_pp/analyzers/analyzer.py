@@ -211,7 +211,8 @@ class TimeErrorAnalyzerBase(Analyzer):
         dtv = datetime.fromtimestamp(int(dec), tz=timezone.utc)
         # Assume that if `dec` is large enough to be 2023 (the year this was
         # coded), or a later year, then it represents an absolute date-time.
-        # This is >53 years if counting seconds from zero.
+        # This is >53 years if counting seconds from zero.  
+        # Assume relative time in any other case.
         #
         # >>> today = datetime.now()
         # >>> today
