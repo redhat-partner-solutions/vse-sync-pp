@@ -208,14 +208,14 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                 'min-test-duration/s': 1,
             },
             'rows': (
-                DPLLS(Decimal('1876878.28'), 3, 3, Decimal(1)),
-                DPLLS(Decimal('1876879.28'), 3, 3, Decimal(1)),
-                DPLLS(Decimal('1876880.28'), 3, 3, Decimal(1)),
-                DPLLS(Decimal('1876881.28'), 3, 3, Decimal(1)),
+                DPLLS(Decimal('1695047659.996251'), 3, 3, Decimal(1)),
+                DPLLS(Decimal('1695047660.996251'), 3, 3, Decimal(1)),
+                DPLLS(Decimal('1695047661.996251'), 3, 3, Decimal(1)),
+                DPLLS(Decimal('1695047662.996251'), 3, 3, Decimal(1)),
             ),
             'result': True,
             'reason': None,
-            'timestamp': Decimal('1876879.28'),
+            'timestamp': '2023-09-18T14:34:20+00:00',
             'duration': Decimal(2),
             'analysis': {
                 'terror': {
