@@ -2,6 +2,7 @@
 
 """Common test functions"""
 
+
 def make_fqname(subject):
     """Return the fully-qualified name of test `subject`."""
     # subject is assumed to be a class

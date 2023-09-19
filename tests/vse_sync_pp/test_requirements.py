@@ -8,6 +8,7 @@ from unittest import TestCase
 
 from vse_sync_pp.requirements import REQUIREMENTS
 
+
 class TestRequirements(TestCase):
     """Test cases for vse_sync_pp.requirements.REQUIREMENTS"""
     def test_g8272_prtc_a(self):
@@ -18,6 +19,7 @@ class TestRequirements(TestCase):
                 'time-error-in-locked-mode/ns': 100,
             },
         )
+
     def test_g8272_prtc_b(self):
         """Test G.8272/PRTC-B requirement values"""
         self.assertEqual(

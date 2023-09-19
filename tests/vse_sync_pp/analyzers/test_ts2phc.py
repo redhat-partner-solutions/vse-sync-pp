@@ -15,6 +15,7 @@ from .test_analyzer import AnalyzerTestBuilder
 
 TERR = namedtuple('TERR', ('timestamp', 'terror', 'state'))
 
+
 class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
     """Test cases for vse_sync_pp.analyzers.ts2phc.TimeErrorAnalyzer"""
     constructor = TimeErrorAnalyzer
@@ -96,13 +97,13 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                 'min-test-duration/s': 4,
             },
             'rows': (
-                TERR(Decimal(0),  0, 's2'),
-                TERR(Decimal(1),  0, 's2'),
-                TERR(Decimal(2),  0, 's2'),
+                TERR(Decimal(0), 0, 's2'),
+                TERR(Decimal(1), 0, 's2'),
+                TERR(Decimal(2), 0, 's2'),
                 # terror of 10 is unacceptable
                 TERR(Decimal(3), 10, 's2'),
-                TERR(Decimal(4),  0, 's2'),
-                TERR(Decimal(5),  0, 's2'),
+                TERR(Decimal(4), 0, 's2'),
+                TERR(Decimal(5), 0, 's2'),
             ),
             'result': False,
             'reason': "unacceptable time error",

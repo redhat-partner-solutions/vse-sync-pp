@@ -12,7 +12,9 @@ from vse_sync_pp.analyzers.ppsdpll import (
 
 from .test_analyzer import AnalyzerTestBuilder
 
-DPLLS = namedtuple('DPLLS', ('timestamp','eecstate', 'state', 'terror',))
+
+DPLLS = namedtuple('DPLLS', ('timestamp', 'eecstate', 'state', 'terror',))
+
 
 class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
     """Test cases for vse_sync_pp.analyzers.ppsdpll.TimeErrorAnalyzer"""

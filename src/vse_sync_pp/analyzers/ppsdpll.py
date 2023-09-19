@@ -4,6 +4,7 @@
 
 from .analyzer import TimeErrorAnalyzerBase
 
+
 class TimeErrorAnalyzer(TimeErrorAnalyzerBase):
     """Analyze DPLL time error"""
     id_ = 'ppsdpll/time-error'
@@ -18,6 +19,7 @@ class TimeErrorAnalyzer(TimeErrorAnalyzerBase):
     # 'state' unlocked but operational
     # 4 = DPLL_HOLDOVER
     locked = frozenset({2, 3})
+
     def prepare(self, rows):
         return super().prepare([
             r._replace(terror=float(r.terror)) for r in rows

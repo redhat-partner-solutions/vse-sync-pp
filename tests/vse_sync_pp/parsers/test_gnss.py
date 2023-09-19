@@ -11,30 +11,23 @@ from vse_sync_pp.parsers.gnss import (
 
 from .test_parser import ParserTestBuilder
 
+
 class TestTimeErrorParser(TestCase, metaclass=ParserTestBuilder):
     """Test cases for vse_sync_pp.parsers.gnss.TimeErrorParser"""
     constructor = TimeErrorParser
     id_ = 'gnss/time-error'
     elems = ('timestamp', 'state', 'terror')
     accept = (
-        (   '681011.839,5,-3',
-            (Decimal('681011.839'), 5, -3),
-        ),
-        (
-            '2023-06-16T17:01:11.131Z,1,400',
-            (Decimal('1686934871.131'), 1, 400),
-        ),
-        (
-            '2023-06-16T17:01:11.131282-00:00,2,399',
-            (Decimal('1686934871.131282'), 2, 399),
-        ),
-        (
-            '2023-06-16T17:01:11.131282269+00:00,3,398',
-            (Decimal('1686934871.131282269'), 3, 398),
-        ),
-        (   '681011.839,5,-3,-2.72',
-            (Decimal('681011.839'), 5, -3),
-        ),
+        ('681011.839,5,-3',
+         (Decimal('681011.839'), 5, -3)),
+        ('2023-06-16T17:01:11.131Z,1,400',
+         (Decimal('1686934871.131'), 1, 400)),
+        ('2023-06-16T17:01:11.131282-00:00,2,399',
+         (Decimal('1686934871.131282'), 2, 399)),
+        ('2023-06-16T17:01:11.131282269+00:00,3,398',
+         (Decimal('1686934871.131282269'), 3, 398)),
+        ('681011.839,5,-3,-2.72',
+         (Decimal('681011.839'), 5, -3)),
     )
     reject = (
         'foo bar baz',

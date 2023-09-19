@@ -11,6 +11,7 @@ from vse_sync_pp.parsers.pmc import (
 
 from .test_parser import ParserTestBuilder
 
+
 class TestClockClassParser(TestCase, metaclass=ParserTestBuilder):
     """Test cases for vse_sync_pp.parsers.pmc.TestClockClassParser"""
     constructor = ClockClassParser
@@ -18,29 +19,20 @@ class TestClockClassParser(TestCase, metaclass=ParserTestBuilder):
     elems = ('timestamp', 'clock_class')
     accept = (
         #FreeRun class id: 248
-        (   '681011.839,248,foo',
-            (Decimal('681011.839'), 248),
-        ),
+        ('681011.839,248,foo',
+         (Decimal('681011.839'), 248),),
         #Locked class id: 6
-        (
-            '2023-06-16T17:01:11.131Z,6,foo',
-            (Decimal('1686934871.131'), 6),
-        ),
+        ('2023-06-16T17:01:11.131Z,6,foo',
+         (Decimal('1686934871.131'), 6),),
         #Holdover class ids: 7,140,150,160
-        (
-            '2023-06-16T17:01:11.131282-00:00,7,foo',
-            (Decimal('1686934871.131282'), 7),
-        ),
-        (
-            '2023-06-16T17:01:11.131282269+00:00,140,foo',
-            (Decimal('1686934871.131282269'), 140),
-        ),
-        (   '681011.839,150,foo',
-            (Decimal('681011.839'), 150),
-        ),
-        (   '681011.839,160,foo',
-            (Decimal('681011.839'), 160),
-        ),
+        ('2023-06-16T17:01:11.131282-00:00,7,foo',
+         (Decimal('1686934871.131282'), 7),),
+        ('2023-06-16T17:01:11.131282269+00:00,140,foo',
+         (Decimal('1686934871.131282269'), 140),),
+        ('681011.839,150,foo',
+         (Decimal('681011.839'), 150),),
+        ('681011.839,160,foo',
+         (Decimal('681011.839'), 160),),
     )
     reject = (
         'foo bar baz',

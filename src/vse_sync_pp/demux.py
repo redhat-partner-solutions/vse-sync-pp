@@ -13,6 +13,7 @@ from .common import (
 from .parsers import PARSERS
 from .source import muxed
 
+
 def main():
     """Demultiplex log messages from a single multiplexed source.
 
@@ -36,6 +37,7 @@ def main():
             # Python exits with error code 1 on EPIPE
             if not print_loj(data):
                 sys.exit(1)
+
 
 if __name__ == '__main__':
     main()

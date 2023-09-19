@@ -12,6 +12,7 @@ from .common import (
 
 from .parsers import PARSERS
 
+
 def main():
     """Parse log messages from a single source.
 
@@ -38,6 +39,7 @@ def main():
             # Python exits with error code 1 on EPIPE
             if not print_loj(data):
                 sys.exit(1)
+
 
 if __name__ == '__main__':
     main()

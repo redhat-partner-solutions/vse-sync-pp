@@ -12,6 +12,7 @@ RE_ISO8601_DECFRAC = re.compile(
     r'^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})\.(\d+)(.*)$'
 )
 
+
 def parse_timestamp_abs(val):
     """Return a :class:`Decimal` from `val`, an absolute timestamp string.
 
@@ -44,6 +45,7 @@ def parse_timestamp_abs(val):
     # `dtv` may truncate decimal fraction: use decimal fraction from `val`
     return Decimal(f'{int(dtv.timestamp())}.{match.group(2)}')
 
+
 def parse_decimal(val):
     """Return a :class:`Decimal` from `val` or raise :class:`ValueError`"""
     try:
@@ -51,9 +53,11 @@ def parse_decimal(val):
     except InvalidOperation as exc:
         raise ValueError(val) from exc
 
+
 def parse_timestamp(val):
     """Return a :class:`Decimal` from absolute or relative timestamp `val`"""
     return parse_timestamp_abs(val) or parse_decimal(val)
+
 
 def relative_timestamp(parsed, tzero):
     """Return relative timestamp with respect to `tzero` coming from `parsed`"""
@@ -64,15 +68,17 @@ def relative_timestamp(parsed, tzero):
         parsed = parsed._replace(timestamp=timestamp - tzero)
     return tzero, parsed
 
+
 class Parser():
     """A base class providing common parser functionality"""
-    def make_parsed(self, elems): # pylint: disable=no-self-use
+    def make_parsed(self, elems):
         """Return a namedtuple value from parsed iterable `elems`.
 
         Raise :class:`ValueError` if a value cannot be formed from `elems`.
         """
         raise ValueError(elems)
-    def parse_line(self, line): # pylint: disable=no-self-use,unused-argument
+
+    def parse_line(self, line):
         """Parse `line`.
 
         If `line` is accepted, return a namedtuple value.
@@ -80,6 +86,7 @@ class Parser():
         Otherwise the `line` is discarded, return None.
         """
         return None
+
     def parse(self, file, relative=False):
         """Parse lines from `file` object.
 
@@ -89,11 +96,12 @@ class Parser():
         """
         tzero = None
         for line in file:
-            parsed = self.parse_line(line) # pylint: disable=assignment-from-none
+            parsed = self.parse_line(line)
             if parsed is not None:
                 if relative:
                     tzero, parsed = relative_timestamp(parsed, tzero)
                 yield parsed
+
     def canonical(self, file, relative=False):
         """Parse canonical data from `file` object.
 

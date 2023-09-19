@@ -13,15 +13,18 @@ from vse_sync_pp.parsers.parser import Parser
 
 from .. import make_fqname
 
+
 class TestParser(TestCase):
     """Test cases for vse_sync_pp.parsers.parser.Parser"""
     def test_make_parsed(self):
         """Test vse_sync_pp.parsers.parser.Parser.make_parsed"""
         with self.assertRaises(ValueError):
             Parser().make_parsed(())
+
     def test_parse_line(self):
         """Test vse_sync_pp.parsers.parser.Parser.parse_line"""
         self.assertIsNone(Parser().parse_line('foo bar baz'))
+
 
 class ParserTestBuilder(type):
     """Build tests for vse_sync_pp.parsers
@@ -36,7 +39,7 @@ class ParserTestBuilder(type):
     `file` - a 2-tuple (lines, expect) the parser must parse `expect` from
              `lines` presented as a file object
     """
-    def __new__(cls, name, bases, dct): # pylint: disable=bad-mcs-classmethod-argument
+    def __new__(cls, name, bases, dct):
         constructor = dct['constructor']
         fqname = make_fqname(constructor)
         dct.update({
@@ -74,6 +77,7 @@ class ParserTestBuilder(type):
             ),
         })
         return super().__new__(cls, name, bases, dct)
+
     # make functions for use as TestCase methods
     @staticmethod
     def make_test_id(constructor, fqname, id_):
@@ -83,6 +87,7 @@ class ParserTestBuilder(type):
             self.assertEqual(constructor.id_, id_)
         method.__doc__ = f'Test {fqname} id_ class attribute value'
         return method
+
     @staticmethod
     def make_test_elems(constructor, fqname, elems):
         """Make a function testing elems class attribute value"""
@@ -93,6 +98,7 @@ class ParserTestBuilder(type):
             self.assertIn(constructor.y_name, elems)
         method.__doc__ = f'Test {fqname} elems class attribute value'
         return method
+
     @staticmethod
     def make_test_make_parsed(constructor, fqname, expect):
         """Make a function testing parser makes parsed"""
@@ -104,6 +110,7 @@ class ParserTestBuilder(type):
                 parser.make_parsed(expect[:-1])
         method.__doc__ = f'Test {fqname} make parsed'
         return method
+
     @staticmethod
     def make_test_accept(constructor, fqname, elems, accept):
         """Make a function testing parser accepts line"""
@@ -119,6 +126,7 @@ class ParserTestBuilder(type):
                 self.assertEqual(expect[idx], getattr(parsed, name))
         method.__doc__ = f'Test {fqname} accepts line'
         return method
+
     @staticmethod
     def make_test_reject(constructor, fqname, reject):
         """Make a function testing parser rejects line"""
@@ -130,6 +138,7 @@ class ParserTestBuilder(type):
                 parser.parse_line(line)
         method.__doc__ = f'Test {fqname} rejects line'
         return method
+
     @staticmethod
     def make_test_discard(constructor, fqname, discard):
         """Make a function testing parser discards line"""
@@ -141,6 +150,7 @@ class ParserTestBuilder(type):
             self.assertIsNone(parsed)
         method.__doc__ = f'Test {fqname} discards line'
         return method
+
     @staticmethod
     def make_test_file(constructor, fqname, lines, expect):
         """Make a function testing parser parses `expect` from `lines`"""
@@ -153,6 +163,7 @@ class ParserTestBuilder(type):
                 self.assertEqual(pair[0], pair[1])
             ### parse relative timestamps
             tidx = parser.elems.index('timestamp')
+
             def relative(expect):
                 """Generator yielding items with relative timestamps"""
                 tzero = None
@@ -168,6 +179,7 @@ class ParserTestBuilder(type):
                 self.assertEqual(pair[0], pair[1])
         method.__doc__ = f'Test {fqname} parses file'
         return method
+
     @staticmethod
     def make_test_canonical(constructor, fqname, expect):
         """Make a function testing parser parses `expect` from `expect`"""
