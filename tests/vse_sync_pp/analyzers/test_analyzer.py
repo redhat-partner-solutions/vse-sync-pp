@@ -15,6 +15,7 @@ from vse_sync_pp.analyzers.analyzer import (
 
 from .. import make_fqname
 
+
 class TestConfig(TestCase):
     """Tests for vse_sync_pp.analyzers.analyzer.Config"""
     def test_requirement_errors(self):
@@ -68,11 +69,13 @@ class TestConfig(TestCase):
             "'unknown requirement quod in G.8272/PRTC-A"
             " in config file foobarbaz'",
         )
+
     def test_requirement_success(self):
         """Test vse_sync_pp.analyzers.analyzer.Config.requirement success"""
         config = Config(requirements='G.8272/PRTC-A')
         key = 'time-error-in-locked-mode/ns'
         self.assertEqual(config.requirement(key), 100)
+
     def test_parameter_errors(self):
         """Test vse_sync_pp.analyzers.analyzer.Config.parameter errors"""
         # no filename, no parameters
@@ -107,10 +110,12 @@ class TestConfig(TestCase):
             str(ctx.exception),
             "'unknown parameter wibble in config file quuz'",
         )
+
     def test_parameter_success(self):
         """Test vse_sync_pp.analyzers.analyzer.Config.parameter success"""
         config = Config(parameters={'xxyyz': 'success'})
         self.assertEqual(config.parameter('xxyyz'), 'success')
+
     def test_yaml(self):
         """Test vse_sync_pp.analyzers.analyzer.Config.from_yaml"""
         filename = joinpath(dirname(__file__), 'config.yaml')
@@ -121,6 +126,7 @@ class TestConfig(TestCase):
         )
         self.assertEqual(config.parameter('foo'), 'bar')
         self.assertEqual(config.parameter('baz'), 8)
+
 
 class AnalyzerTestBuilder(type):
     """Build tests for vse_sync_pp.analyzers
@@ -133,7 +139,7 @@ class AnalyzerTestBuilder(type):
                timestamp, duration, analysis giving test config, input data,
                expected outputs
     """
-    def __new__(cls, name, bases, dct): # pylint: disable=bad-mcs-classmethod-argument
+    def __new__(cls, name, bases, dct):
         constructor = dct['constructor']
         fqname = make_fqname(constructor)
         dct.update({
@@ -151,6 +157,7 @@ class AnalyzerTestBuilder(type):
             ),
         })
         return super().__new__(cls, name, bases, dct)
+
     # make functions for use as TestCase methods
     @staticmethod
     def make_test_id(constructor, fqname, id_):
@@ -160,6 +167,7 @@ class AnalyzerTestBuilder(type):
             self.assertEqual(constructor.id_, id_)
         method.__doc__ = f'Test {fqname} id_ class attribute value'
         return method
+
     @staticmethod
     def make_test_parser(constructor, fqname, parser):
         """Make a function testing parser class attribute value"""
@@ -168,10 +176,10 @@ class AnalyzerTestBuilder(type):
             self.assertEqual(constructor.parser, parser)
         method.__doc__ = f'Test {fqname} parser class attribute value'
         return method
+
     @staticmethod
     def make_test_result(constructor, fqname, expect):
         """Make a function testing analyzer test result and analysis"""
-        # pylint: disable=too-many-arguments
         @params(*expect)
         def method(self, dct):
             """Test analyzer test result and analysis"""

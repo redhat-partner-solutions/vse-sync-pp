@@ -11,24 +11,22 @@ from vse_sync_pp.parsers.ts2phc import (
 
 from .test_parser import ParserTestBuilder
 
+
 class TestTimeErrorParser(TestCase, metaclass=ParserTestBuilder):
     """Test cases for vse_sync_pp.parsers.ts2phc.TimeErrorParser"""
     constructor = TimeErrorParser
     id_ = 'ts2phc/time-error'
     elems = ('timestamp', 'interface', 'terror', 'state')
     accept = (
-        (   'ts2phc[681011.839]: [ts2phc.0.config] '
-            'ens7f1 master offset          0 s2 freq      -0',
-            (Decimal('681011.839'), 'ens7f1', 0, 's2'),
-        ),
-        (   'ts2phc[681011.839]: [ts2phc.2.config] '
-            'ens7f1 master offset          0 s2 freq      -0',
-            (Decimal('681011.839'), 'ens7f1', 0, 's2'),
-        ),
-        (   'ts2phc[681011.839]: '
-            'ens7f1 master offset          0 s2 freq      -0',
-            (Decimal('681011.839'), 'ens7f1', 0, 's2'),
-        ),
+        ('ts2phc[681011.839]: [ts2phc.0.config] '
+         'ens7f1 master offset          0 s2 freq      -0',
+         (Decimal('681011.839'), 'ens7f1', 0, 's2'),),
+        ('ts2phc[681011.839]: [ts2phc.2.config] '
+         'ens7f1 master offset          0 s2 freq      -0',
+         (Decimal('681011.839'), 'ens7f1', 0, 's2'),),
+        ('ts2phc[681011.839]: '
+         'ens7f1 master offset          0 s2 freq      -0',
+         (Decimal('681011.839'), 'ens7f1', 0, 's2'),),
     )
     reject = ()
     discard = (

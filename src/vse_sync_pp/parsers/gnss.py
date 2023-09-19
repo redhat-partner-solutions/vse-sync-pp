@@ -6,6 +6,7 @@ from collections import namedtuple
 
 from .parser import (Parser, parse_timestamp)
 
+
 class TimeErrorParser(Parser):
     """Parse time error from a GNSS CSV sample"""
     id_ = 'gnss/time-error'
@@ -19,6 +20,7 @@ class TimeErrorParser(Parser):
     elems = ('timestamp', 'state', 'terror')
     y_name = 'terror'
     parsed = namedtuple('Parsed', elems)
+
     def make_parsed(self, elems):
         if len(elems) < len(self.elems):
             raise ValueError(elems)
@@ -26,6 +28,7 @@ class TimeErrorParser(Parser):
         state = int(elems[1])
         terror = int(elems[2])
         return self.parsed(timestamp, state, terror)
+
     def parse_line(self, line):
         # GNSS samples come from a fixed format CSV file
         return self.make_parsed(line.split(','))

@@ -5,6 +5,7 @@
 import json
 from decimal import Decimal
 
+
 def logged(file, parser):
     """Generator yielding (id_, data) for lines in `file` parsed by `parser`.
 
@@ -22,6 +23,7 @@ def logged(file, parser):
         if data is not None:
             yield (parser.id_, data)
 
+
 def muxed(file, parsers):
     """Generator yielding (id_, data) for multiplexed content in `file`.
 
@@ -30,9 +32,9 @@ def muxed(file, parsers):
     line is discarded: otherwise a pair is generated.
 
     `id_` is the value at 'id';
-    `data`  the values within data must be the equivalent to  canonical data 
-    produced by the parser at `id_` in `parsers` for the value at 'data'. 
-    They can be in the form of a JSON array or a JSON object. 
+    `data`  the values within data must be the equivalent to  canonical data
+    produced by the parser at `id_` in `parsers` for the value at 'data'.
+    They can be in the form of a JSON array or a JSON object.
     If the data is a JSON array then the ordering must match the parser output.
     If the data is a JSON object then the names must match the parser output.
 
@@ -52,7 +54,7 @@ def muxed(file, parsers):
             pass
         else:
             if isinstance(obj['data'], dict):
-                data = tuple(obj['data'][name] for  name in parser.elems)
+                data = tuple(obj['data'][name] for name in parser.elems)
             else:
                 data = obj['data']
             parsed = parser.make_parsed(data)

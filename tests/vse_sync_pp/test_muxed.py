@@ -42,25 +42,23 @@ DPLL_DICT = CaseValue(
 GNSS_LIST = CaseValue(
     {
         "id": "gnss/time-error",
-        "data": ["681011.839", "5",  "2", "-3"],
+        "data": ["681011.839", "5", "2", "-3"],
     },
-    ("gnss/time-error", (Decimal("681011.839"), 5,  2)),
+    ("gnss/time-error", (Decimal("681011.839"), 5, 2)),
 )
 
 GNSS_DICT = CaseValue(
     {
         "id": "gnss/time-error",
         "data": {
-            "timestamp": "681011.839", 
+            "timestamp": "681011.839",
             "state": "5",
-            "terror": "2", 
+            "terror": "2",
             "ferror": "-3",
-        },  
+        },
     },
     ("gnss/time-error", (Decimal("681011.839"), 5, 2)),
 )
-
-
 
 
 class TestMuxed(TestCase):
@@ -92,7 +90,7 @@ class TestMuxed(TestCase):
         self._test(DPLL_DICT, GNSS_DICT)
 
     def test_mixed(self):
-        """Check that muxed can process a mixture of lines with json 
+        """Check that muxed can process a mixture of lines with json
         arrays and json objects
         """
         self._test(DPLL_DICT, GNSS_LIST)

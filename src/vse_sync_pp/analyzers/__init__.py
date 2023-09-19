@@ -2,8 +2,6 @@
 
 """Analyzers"""
 
-from .analyzer import Config
-
 from . import (
     gnss,
     ppsdpll,

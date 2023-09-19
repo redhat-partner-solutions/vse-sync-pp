@@ -4,6 +4,7 @@
 
 from .analyzer import TimeErrorAnalyzerBase
 
+
 class TimeErrorAnalyzer(TimeErrorAnalyzerBase):
     """Analyze time error"""
     id_ = 'phc2sys/time-error'

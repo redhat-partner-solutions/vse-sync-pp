@@ -11,6 +11,7 @@ from vse_sync_pp.parsers.dpll import (
 
 from .test_parser import ParserTestBuilder
 
+
 class TestTimeErrorParser(TestCase, metaclass=ParserTestBuilder):
     """Test cases for vse_sync_pp.parsers.dpll.TimeErrorParser"""
     constructor = TimeErrorParser

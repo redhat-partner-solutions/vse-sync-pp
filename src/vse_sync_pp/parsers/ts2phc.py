@@ -7,12 +7,14 @@ from collections import namedtuple
 
 from .parser import (Parser, parse_decimal)
 
+
 class TimeErrorParser(Parser):
     """Parse time error from a ts2phc log message"""
     id_ = 'ts2phc/time-error'
     elems = ('timestamp', 'interface', 'terror', 'state')
     y_name = 'terror'
     parsed = namedtuple('Parsed', elems)
+
     @staticmethod
     def build_regexp(interface=None):
         """Return a regular expression string for parsing log file lines.
@@ -20,8 +22,8 @@ class TimeErrorParser(Parser):
         If `interface` then only parse lines for the specified interface.
         """
         return r''.join((
-            r'^ts2phc' +
-            r'\[([1-9][0-9]*\.[0-9]{3})\]:', # timestamp
+            r'^ts2phc'
+            + r'\[([1-9][0-9]*\.[0-9]{3})\]:', # timestamp
             r'(?:\s\[ts2phc\.\d\..*\])?',  # configuration file name
             fr'\s({interface})' if interface else r'\s(\S+)', # interface
             r'\smaster offset\s*',
@@ -29,9 +31,11 @@ class TimeErrorParser(Parser):
             r'\s(\S+)', # state
             r'.*$',
         ))
+
     def __init__(self, interface=None):
         super().__init__()
         self._regexp = re.compile(self.build_regexp(interface))
+
     def make_parsed(self, elems):
         if len(elems) < len(self.elems):
             raise ValueError(elems)
@@ -40,6 +44,7 @@ class TimeErrorParser(Parser):
         terror = int(elems[2])
         state = str(elems[3])
         return self.parsed(timestamp, interface, terror, state)
+
     def parse_line(self, line):
         matched = self._regexp.match(line)
         if matched:

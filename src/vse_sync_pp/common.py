@@ -8,6 +8,7 @@ from contextlib import nullcontext
 import json
 from decimal import Decimal
 
+
 def open_input(filename, encoding='utf-8', **kwargs):
     """Return a context manager for reading from `filename`.
 
@@ -17,6 +18,7 @@ def open_input(filename, encoding='utf-8', **kwargs):
         return nullcontext(sys.stdin)
     return open(filename, encoding=encoding, **kwargs)
 
+
 class JsonEncoder(json.JSONEncoder):
     """A JSON encoder accepting :class:`Decimal` values"""
     def default(self, o):
@@ -24,6 +26,7 @@ class JsonEncoder(json.JSONEncoder):
         if isinstance(o, Decimal):
             return float(o)
         return super().default(o)
+
 
 def print_loj(val, encoder_cls=JsonEncoder, flush=True):
     """Print value `val` as a line of JSON and, optionally, `flush` stdout.

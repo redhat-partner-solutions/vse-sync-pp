@@ -11,23 +11,26 @@ from .common import open_input
 
 from .parsers import PARSERS
 
+
 class Plotter():
     """Rudimentary plotter of data values against timestamp"""
     def __init__(self, y_name, y_desc=None):
         self._x_name = 'timestamp'
         self._y_name = y_name
         if y_desc is None:
-          self._y_desc = y_name
+            self._y_desc = y_name
         else:
-          self._y_desc = y_desc
+            self._y_desc = y_desc
         self._x_data = []
         self._y_data = []
+
     def append(self, data):
         """Append x and y data points extracted from `data`"""
         x_val = getattr(data, self._x_name)
         self._x_data.append(x_val)
         y_val = getattr(data, self._y_name)
         self._y_data.append(y_val)
+
     def plot(self, filename):
         """Plot data to `filename`"""
         fig, (ax1, ax2) = plt.subplots(2, constrained_layout=True)
@@ -46,6 +49,7 @@ class Plotter():
         ax2.set_yscale('symlog', linthresh=10)
         ax2.set_title(f'Histogram of {self._y_desc}')
         plt.savefig(filename)
+
 
 def main():
     """Plot data parsed from log messages from a single source.
@@ -77,6 +81,7 @@ def main():
         for parsed in method(fid):
             plotter.append(parsed)
     plotter.plot(args.output)
+
 
 if __name__ == '__main__':
     main()
