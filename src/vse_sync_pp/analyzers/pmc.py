@@ -102,7 +102,7 @@ class ClockStateAnalyzer(Analyzer):
 
     def test(self, data):
         if len(data) == 0:
-            return (False, "no data")
+            return ("error", "no data")
 
         if data.iloc[-1].timestamp - data.iloc[0].timestamp < self._duration_min:
             return (False, "short test duration")
