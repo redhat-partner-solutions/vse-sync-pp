@@ -193,9 +193,13 @@ class Analyzer():
     def test(self, data):
         """This analyzer's test of the collected `data`.
 
-        Return a 2-tuple (result, reason). Boolean `result` indicates test
-        pass/fail. String `reason` qualifies `result` (or None is `result`
-        if unqualified).
+        Return a 2-tuple (result, reason) where `result` is a boolean or the
+        string "error" and `reason` is a string or None.
+
+        A boolean `result` indicates test success or failure: `result` "error"
+        indicates that a result could not be produced.
+
+        A string `reason` qualifies `result`; when None `result` is unqualified.
         """
         raise NotImplementedError
 
@@ -240,8 +244,8 @@ class TimeErrorAnalyzerBase(Analyzer):
 
     def test(self, data):
         if len(data) == 0:
-            return (False, "no data")
-        if frozenset(data.state.unique()).difference(self.locked):
+            return ("error", "no data")
+        if frozenset(data.state.unique()).difference(self.locked): # pylint: disable=no-member
             return (False, "loss of lock")
         terr_min = data.terror.min()
         terr_max = data.terror.max()

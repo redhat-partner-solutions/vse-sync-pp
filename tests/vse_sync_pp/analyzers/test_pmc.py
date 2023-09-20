@@ -25,7 +25,7 @@ class TestClockStateAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                 'min-test-duration/s': 1,
             },
             'rows': (),
-            'result': False,
+            'result': "error",
             'reason': "no data",
             'timestamp': None,
             'duration': None,
