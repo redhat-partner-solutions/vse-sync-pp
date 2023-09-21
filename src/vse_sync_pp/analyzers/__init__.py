@@ -2,6 +2,8 @@
 
 """Analyzers"""
 
+from .analyzer import Config # noqa
+
 from . import (
     gnss,
     ppsdpll,
