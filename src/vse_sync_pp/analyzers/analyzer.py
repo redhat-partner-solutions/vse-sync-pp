@@ -432,6 +432,8 @@ class TimeDeviationAnalyzerBase(TimeIntervalErrorAnalyzerBase):
                 'timestamp': self._timestamp_from_dec(data.iloc[0].timestamp),
                 'duration': data.iloc[-1].timestamp - data.iloc[0].timestamp,
                 'tdev': self._statistics(self._samples, 'ns'),
+                'tdev_taus': self._taus.tolist(),
+                'tdev_samples': self._samples.tolist(),
             }
         return analysis
 
@@ -473,5 +475,7 @@ class MaxTimeIntervalErrorAnalyzerBase(TimeIntervalErrorAnalyzerBase):
                 'timestamp': self._timestamp_from_dec(data.iloc[0].timestamp),
                 'duration': data.iloc[-1].timestamp - data.iloc[0].timestamp,
                 'mtie': self._statistics(self._samples, 'ns'),
+                'mtie_taus': self._taus.tolist(),
+                'mtie_samples': self._samples.tolist(),
             }
         return analysis

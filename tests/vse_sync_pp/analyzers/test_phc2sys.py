@@ -297,6 +297,8 @@ class TestMaxTimeIntervalErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                     'stddev': 0,
                     'variance': 0,
                 },
+                'mtie_samples': [0.],
+                'mtie_taus': [1.],
             },
         },
         {
@@ -336,6 +338,8 @@ class TestMaxTimeIntervalErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                     'stddev': 0,
                     'variance': 0,
                 },
+                'mtie_samples': [0.],
+                'mtie_taus': [1.],
             },
         },
         {
@@ -375,6 +379,8 @@ class TestMaxTimeIntervalErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                     'stddev': 0,
                     'variance': 0,
                 },
+                'mtie_samples': [0.],
+                'mtie_taus': [1.],
             },
         },
         {
@@ -414,6 +420,8 @@ class TestMaxTimeIntervalErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                     'stddev': 0,
                     'variance': 0,
                 },
+                'mtie_samples': [0.],
+                'mtie_taus': [1.],
             },
         },
     )
@@ -505,6 +513,8 @@ class TestTimeDeviationAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                     'stddev': 0,
                     'variance': 0,
                 },
+                'tdev_samples': [0.],
+                'tdev_taus': [1.],
             },
         },
         {
@@ -552,6 +562,8 @@ class TestTimeDeviationAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                     'stddev': 0,
                     'variance': 0,
                 },
+                'tdev_samples': [0.],
+                'tdev_taus': [1.],
             },
         },
         {
@@ -599,6 +611,8 @@ class TestTimeDeviationAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                     'stddev': 0,
                     'variance': 0,
                 },
+                'tdev_samples': [0.],
+                'tdev_taus': [1.],
             },
         },
         {
@@ -646,6 +660,8 @@ class TestTimeDeviationAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                     'stddev': 0,
                     'variance': 0,
                 },
+                'tdev_samples': [0.],
+                'tdev_taus': [1.],
             },
         },
     )
