@@ -7,6 +7,7 @@ from contextlib import nullcontext
 
 import json
 from decimal import Decimal
+import numpy
 
 
 def open_input(filename, encoding='utf-8', **kwargs):
@@ -20,11 +21,15 @@ def open_input(filename, encoding='utf-8', **kwargs):
 
 
 class JsonEncoder(json.JSONEncoder):
-    """A JSON encoder accepting :class:`Decimal` values"""
+    """A JSON encoder accepting :class:`Decimal` values
+    and arrays `numpy.ndarray` values
+    """
     def default(self, o):
         """Return a commonly serializable value from `o`"""
         if isinstance(o, Decimal):
             return float(o)
+        if isinstance(o, numpy.ndarray):
+            return o.tolist()
         return super().default(o)
 
 
