@@ -71,14 +71,14 @@ class Plotter():
 
     def plot_scatter(self, filename):
         fig, ax = plt.subplots(1, constrained_layout=True)
-        fig.set_size_inches(10, 8)
+        fig.set_size_inches(10, 4)
         self._plot_scatter(ax)
         plt.savefig(filename)
         return ax
     
     def plot_histogram(self, filename):
         fig, ax = plt.subplots(1, constrained_layout=True)
-        fig.set_size_inches(10, 8)
+        fig.set_size_inches(10, 4)
         self._plot_hist(ax)
         plt.savefig(filename)
         return ax
