@@ -6,49 +6,82 @@ from argparse import ArgumentParser
 
 import numpy as np
 import matplotlib.pyplot as plt
+from collections import namedtuple
 
 from .common import open_input
 
 from .parsers import PARSERS
 
 
+Axis = namedtuple("Axis", ["desc", "attr", "scale", "scale_kwargs"], defaults=[None, None, None, None])
+TIMESERIES = Axis("Time", "timestamp")
+
+
 class Plotter():
     """Rudimentary plotter of data values against timestamp"""
-    def __init__(self, y_name, y_desc=None):
-        self._x_name = 'timestamp'
-        self._y_name = y_name
-        if y_desc is None:
-            self._y_desc = y_name
-        else:
-            self._y_desc = y_desc
+    def __init__(self, x, y):
+        self._x = x
+        self._y = y
         self._x_data = []
         self._y_data = []
 
+    @staticmethod
+    def _extract_attr(axis, data):
+        return getattr(data, axis.attr)
+
+    def _set_yscale(self, ax):
+        if self._y.scale is not None:
+            ax.set_yscale(self._y.scale, **(self._y.scale_kwargs or {}))
+        elif any((abs(v) > 10 for v in self._y_data)):
+            ax.set_yscale("symlog", linthresh=10)
+
     def append(self, data):
         """Append x and y data points extracted from `data`"""
-        x_val = getattr(data, self._x_name)
-        self._x_data.append(x_val)
-        y_val = getattr(data, self._y_name)
-        self._y_data.append(y_val)
+        self._x_data.append(self._extract_attr(self._x, data))
+        self._y_data.append(self._extract_attr(self._y, data))
+    
+    def _plot_scatter(self, ax):
+        ax.axhline(0, color='black')
+        self._set_yscale(ax)
+        if self._x.scale is not None:
+            ax.set_xscale(self._x.scale, **(self._x.scale_kwargs or {}))
+        ax.plot(self._x_data, self._y_data, '.')
+        ax.grid()
+        ax.set_title(f'{self._x.desc} vs {self._y.desc}')
+        
+    def _plot_hist(self, ax):
+        counts, bins = np.histogram(
+            np.array(self._y_data, dtype=float),
+            bins='scott',
+        )
+        ax.hist(bins[:-1], bins, weights=counts)
+        self._set_yscale(ax)
+        if self._x.scale is not None:
+            ax.set_xscale(self._x.scale, **(self._x.scale_kwargs or {}))
+        ax.set_title(f'Histogram of {self._y.desc}')
 
     def plot(self, filename):
         """Plot data to `filename`"""
         fig, (ax1, ax2) = plt.subplots(2, constrained_layout=True)
         fig.set_size_inches(10, 8)
-        ax1.axhline(0, color='black')
-        if any((abs(v) > 10 for v in self._y_data)):
-            ax1.set_yscale('symlog', linthresh=10)
-        ax1.plot(self._x_data, self._y_data, '.')
-        ax1.grid()
-        ax1.set_title(f'{self._x_name} vs {self._y_desc}')
-        counts, bins = np.histogram(
-            np.array(self._y_data, dtype=float),
-            bins='scott',
-        )
-        ax2.hist(bins[:-1], bins, weights=counts)
-        ax2.set_yscale('symlog', linthresh=10)
-        ax2.set_title(f'Histogram of {self._y_desc}')
+        self._plot_scatter(ax1)
+        self._plot_hist(ax2)
         plt.savefig(filename)
+        return (ax1, ax2)
+
+    def plot_scatter(self, filename):
+        fig, ax = plt.subplots(1, constrained_layout=True)
+        fig.set_size_inches(10, 8)
+        self._plot_scatter(ax)
+        plt.savefig(filename)
+        return ax
+    
+    def plot_histogram(self, filename):
+        fig, ax = plt.subplots(1, constrained_layout=True)
+        fig.set_size_inches(10, 8)
+        self._plot_hist(ax)
+        plt.savefig(filename)
+        return ax
 
 
 def main():
@@ -75,7 +108,7 @@ def main():
     )
     args = aparser.parse_args()
     parser = PARSERS[args.parser]()
-    plotter = Plotter(parser.y_name)
+    plotter = Plotter(TIMESERIES, Axis(parser.y_name, parser.y_name))
     with open_input(args.input) as fid:
         method = parser.canonical if args.canonical else parser.parse
         for parsed in method(fid):
