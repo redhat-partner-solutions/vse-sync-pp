@@ -454,8 +454,8 @@ class MaxTimeIntervalErrorAnalyzerBase(TimeIntervalErrorAnalyzerBase):
     """
     def __init__(self, config):
         super().__init__(config)
-        # required system maximum time interval error output in us
-        self._accuracy = config.requirement('maximum-time-interval-error-in-locked-mode/us')
+        # required system maximum time interval error output in ns
+        self._accuracy = config.requirement('maximum-time-interval-error-in-locked-mode/ns')
         # limit of inaccuracy at observation point
         self._limit = config.parameter('maximum-time-interval-error-limit/%')
         # list of observation windows intervals to calculate MTIE

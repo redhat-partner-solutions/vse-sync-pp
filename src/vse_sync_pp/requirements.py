@@ -4,9 +4,9 @@
 
 REQUIREMENTS = {
     'G.8272/PRTC-A': {
-        'maximum-time-interval-error-in-locked-mode/us': {
-            (None, 273): lambda t: 0.000275 * t + 0.025,
-            (274, None): lambda t: 0.10
+        'maximum-time-interval-error-in-locked-mode/ns': {
+            (None, 273): lambda t: 0.275 * t + 25,
+            (274, 10000): lambda t: 100
         },
         'time-deviation-in-locked-mode/ns': {
             (None, 100): lambda t: 3,
@@ -16,9 +16,9 @@ REQUIREMENTS = {
         'time-error-in-locked-mode/ns': 100,
     },
     'G.8272/PRTC-B': {
-        'maximum-time-interval-error-in-locked-mode/us': {
-            (None, 54.5): lambda t: 0.000275 * t + 0.025,
-            (54.5, None): lambda t: 0.04
+        'maximum-time-interval-error-in-locked-mode/ns': {
+            (None, 54.5): lambda t: 0.275 * t + 25,
+            (54.5, 10000): lambda t: 40
         },
         'time-deviation-in-locked-mode/ns': {
             (None, 100): lambda t: 1,
