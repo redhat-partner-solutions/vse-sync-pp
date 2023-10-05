@@ -379,21 +379,28 @@ class TimeIntervalErrorAnalyzerBase(Analyzer):
             return (False, "short test duration")
         if len(data) - 1 < self._duration_min:
             return (False, "short test samples")
-        if self._rate is None:
-            self._rate = self.calculate_rate(data)
-        if self._lpf_signal is None:
-            self._lpf_signal = calculate_filter(data, self._transient, self._rate)
         return None
 
     def _explain_common(self, data):
         if len(data) == 0:
             return {}
         if self._rate is None:
-            self._rate = self.calculate_rate(data)
+            self._rate = self.calculate_rate(self._data)
         if self._lpf_signal is None:
             self._lpf_signal = calculate_filter(data, self._transient, self._rate)
         return None
 
+    def toplot(self):
+        self.close()
+        self._generate_taus()
+        yield from zip(self._taus, self._samples)
+
+    def _generate_taus(self):
+        if self._rate is None:
+            self._rate = self.calculate_rate(self._data)
+        if self._lpf_signal is None:
+            self._lpf_signal = calculate_filter(self._data, self._transient, self._rate)
+        return None
 
 class TimeDeviationAnalyzerBase(TimeIntervalErrorAnalyzerBase):
     """Analyze Time Deviation (TDEV).
@@ -413,11 +420,15 @@ class TimeDeviationAnalyzerBase(TimeIntervalErrorAnalyzerBase):
         # TDEV samples
         self._samples = None
 
+    def _generate_taus(self):
+        super()._generate_taus()
+        if self._samples is None:
+            self._taus, self._samples, errors, ns = allantools.tdev(self._lpf_signal, rate=self._rate, data_type="phase", taus=self._taus_list) # noqa
+
     def test(self, data):
         result = self._test_common(data)
         if result is None:
-            if self._samples is None:
-                self._taus, self._samples, errors, ns = allantools.tdev(self._lpf_signal, rate=self._rate, data_type="phase", taus=self._taus_list) # noqa
+            self._generate_taus()
             if out_of_range(self._taus, self._samples, self._accuracy, self._limit):
                 return (False, "unacceptable time deviation")
             return (True, None)
@@ -426,14 +437,11 @@ class TimeDeviationAnalyzerBase(TimeIntervalErrorAnalyzerBase):
     def explain(self, data):
         analysis = self._explain_common(data)
         if analysis is None:
-            if self._samples is None:
-                self._taus, self._samples, errors, ns = allantools.tdev(self._lpf_signal, rate=self._rate, data_type="phase", taus=self._taus_list) # noqa
+            self._generate_taus()
             return {
                 'timestamp': self._timestamp_from_dec(data.iloc[0].timestamp),
                 'duration': data.iloc[-1].timestamp - data.iloc[0].timestamp,
                 'tdev': self._statistics(self._samples, 'ns'),
-                'tdev_taus': self._taus.tolist(),
-                'tdev_samples': self._samples.tolist(),
             }
         return analysis
 
@@ -456,26 +464,26 @@ class MaxTimeIntervalErrorAnalyzerBase(TimeIntervalErrorAnalyzerBase):
         # MTIE samples
         self._samples = None
 
+    def _generate_taus(self):
+        super()._generate_taus()
+        if self._samples is None:
+            self._taus, self._samples, errors, ns = allantools.mtie(self._lpf_signal, rate=self._rate, data_type="phase", taus=self._taus_list) # noqa
+
     def test(self, data):
         result = self._test_common(data)
         if result is None:
-            if self._samples is None:
-                self._taus, self._samples, errors, ns = allantools.mtie(self._lpf_signal, rate=self._rate, data_type="phase", taus=self._taus_list) # noqa
+            self._generate_taus()
             if out_of_range(self._taus, self._samples, self._accuracy, self._limit):
                 return (False, "unacceptable mtie")
             return (True, None)
         return result
-
     def explain(self, data):
         analysis = self._explain_common(data)
         if analysis is None:
-            if self._samples is None:
-                self._taus, self._samples, errors, ns = allantools.mtie(self._lpf_signal, rate=self._rate, data_type="phase", taus=self._taus_list) # noqa
+            self._generate_taus()
             return {
                 'timestamp': self._timestamp_from_dec(data.iloc[0].timestamp),
                 'duration': data.iloc[-1].timestamp - data.iloc[0].timestamp,
                 'mtie': self._statistics(self._samples, 'ns'),
-                'mtie_taus': self._taus.tolist(),
-                'mtie_samples': self._samples.tolist(),
             }
         return analysis
