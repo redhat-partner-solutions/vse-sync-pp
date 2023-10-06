@@ -32,7 +32,7 @@ REQUIREMENTS = {
         'time-deviation-in-locked-mode/ns': {
             (None, 100000): lambda t: 100
         },
-        'maximum-time-interval-error-in-locked-mode/us': {
+        'maximum-time-interval-error-in-locked-mode/ns': {
             (None, 100000): lambda t: 1
         }
     },
