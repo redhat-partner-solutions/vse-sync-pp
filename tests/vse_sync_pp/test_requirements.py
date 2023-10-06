@@ -31,7 +31,7 @@ class TestRequirements(TestCase):
 
         self.assertEqual(REQUIREMENTS['G.8272/PRTC-B']['time-error-in-locked-mode/ns'], 40)
 
-        (interval1, func1), (interval2, func2) = REQUIREMENTS['G.8272/PRTC-B']['maximum-time-interval-error-in-locked-mode/ns'].items()
+        (interval1, func1), (interval2, func2) = REQUIREMENTS['G.8272/PRTC-B']['maximum-time-interval-error-in-locked-mode/ns'].items() # noqa
 
         self.assertEqual(func1(100), 52.5)
         self.assertEqual(func2(300), 40)

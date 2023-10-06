@@ -402,6 +402,7 @@ class TimeIntervalErrorAnalyzerBase(Analyzer):
             self._lpf_signal = calculate_filter(self._data, self._transient, self._rate)
         return None
 
+
 class TimeDeviationAnalyzerBase(TimeIntervalErrorAnalyzerBase):
     """Analyze Time Deviation (TDEV).
 
@@ -477,6 +478,7 @@ class MaxTimeIntervalErrorAnalyzerBase(TimeIntervalErrorAnalyzerBase):
                 return (False, "unacceptable mtie")
             return (True, None)
         return result
+
     def explain(self, data):
         analysis = self._explain_common(data)
         if analysis is None:

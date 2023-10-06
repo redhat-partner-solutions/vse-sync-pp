@@ -39,7 +39,7 @@ class Plotter():
         """Append x and y data points extracted from `data`"""
         self._x_data.append(self._extract_attr(self._x, data))
         self._y_data.append(self._extract_attr(self._y, data))
-    
+
     def _plot_scatter(self, ax):
         ax.axhline(0, color='black')
         self._set_yscale(ax)
@@ -48,7 +48,7 @@ class Plotter():
         ax.plot(self._x_data, self._y_data, '.')
         ax.grid()
         ax.set_title(f'{self._x.desc} vs {self._y.desc}')
-        
+
     def _plot_hist(self, ax):
         counts, bins = np.histogram(
             np.array(self._y_data, dtype=float),
@@ -75,7 +75,7 @@ class Plotter():
         self._plot_scatter(ax)
         plt.savefig(filename)
         return fig, ax
-    
+
     def plot_histogram(self, filename):
         fig, ax = plt.subplots(1, constrained_layout=True)
         fig.set_size_inches(10, 4)
