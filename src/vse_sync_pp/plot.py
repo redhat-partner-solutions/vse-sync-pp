@@ -52,7 +52,7 @@ class Plotter():
     def _plot_hist(self, ax):
         counts, bins = np.histogram(
             np.array(self._y_data, dtype=float),
-            bins='scott',
+            bins='fd'
         )
         ax.hist(bins[:-1], bins, weights=counts)
         self._set_yscale(ax)
@@ -66,8 +66,11 @@ class Plotter():
         fig.set_size_inches(10, 8)
         self._plot_scatter(ax1)
         self._plot_hist(ax2)
+        ax3 = ax2.twinx()
+        ax3.set_ylabel('CDF')
+        ax3.ecdf(self._y_data, color="black", linewidth=2)
         plt.savefig(filename)
-        return fig, (ax1, ax2)
+        return fig, (ax1, ax2, ax3)
 
     def plot_scatter(self, filename):
         fig, ax = plt.subplots(1, constrained_layout=True)
