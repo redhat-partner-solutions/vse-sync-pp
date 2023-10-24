@@ -52,7 +52,7 @@ class Plotter():
     def _plot_hist(self, ax):
         counts, bins = np.histogram(
             np.array(self._y_data, dtype=float),
-            bins='fd'
+            bins='scott'
         )
         ax.hist(bins[:-1], bins, weights=counts)
         self._set_yscale(ax)
