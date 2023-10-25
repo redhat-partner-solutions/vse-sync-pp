@@ -193,6 +193,38 @@ class TestTimeErrorAnalyzer(TestCase, metaclass=AnalyzerTestBuilder):
                 'min-test-duration/s': 4,
             },
             'rows': (
+                TERR(Decimal(0), 0, 's2'),
+                TERR(Decimal(1), 0, 's2'),
+                TERR(Decimal(2), 0, 's2'),
+                TERR(Decimal(3), 0, 's2'),
+                # oops, missing sample
+                TERR(Decimal(5), 0, 's2'),
+                TERR(Decimal(6), 0, 's2'),
+            ),
+            'result': False,
+            'reason': "missing test samples",
+            'timestamp': Decimal(1),
+            'duration': Decimal(5),
+            'analysis': {
+                'terror': {
+                    'units': 'ns',
+                    'min': 0,
+                    'max': 0,
+                    'range': 0,
+                    'mean': 0,
+                    'stddev': 0,
+                    'variance': 0,
+                },
+            },
+        },
+        {
+            'requirements': 'G.8272/PRTC-A',
+            'parameters': {
+                'time-error-limit/%': 100,
+                'transient-period/s': 1,
+                'min-test-duration/s': 4,
+            },
+            'rows': (
                 TERR(Decimal(0), 0, 's1'),
                 TERR(Decimal(1), 0, 's2'),
                 TERR(Decimal(2), 0, 's2'),

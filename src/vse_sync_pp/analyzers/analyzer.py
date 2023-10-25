@@ -144,6 +144,13 @@ class Analyzer():
         # relative time
         return dec
 
+    @staticmethod
+    def _check_missing_samples(data, result, reason):
+        if reason is None:
+            if len(data.timestamp.diff().astype(float).round(0).tail(-1).unique()) > 1:
+                return (False, "missing test samples")
+        return result, reason
+
     @property
     def result(self):
         """The boolean result from this analyzer's test of the collected data"""
