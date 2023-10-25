@@ -12,6 +12,9 @@ class TimeErrorAnalyzer(TimeErrorAnalyzerBase):
     parser = id_
     locked = frozenset({'s2'})
 
+    def test(self, data):
+        return self._check_missing_samples(data, *super().test(data))
+
 
 class TimeDeviationAnalyzer(TimeDeviationAnalyzerBase):
     """Analyze time deviation"""
@@ -19,9 +22,15 @@ class TimeDeviationAnalyzer(TimeDeviationAnalyzerBase):
     parser = 'ts2phc/time-error'
     locked = frozenset({'s2'})
 
+    def test(self, data):
+        return self._check_missing_samples(data, *super().test(data))
+
 
 class MaxTimeIntervalErrorAnalyzer(MaxTimeIntervalErrorAnalyzerBase):
     """Analyze max time interval error"""
     id_ = 'ts2phc/mtie'
     parser = 'ts2phc/time-error'
     locked = frozenset({'s2'})
+
+    def test(self, data):
+        return self._check_missing_samples(data, *super().test(data))
