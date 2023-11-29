@@ -14,7 +14,7 @@ from .parsers import PARSERS
 
 
 Axis = namedtuple("Axis", ["desc", "attr", "scale", "scale_kwargs"], defaults=[None, None, None, None])
-TIMESERIES = Axis("Time", "timestamp")
+TIMESERIES = Axis("Time (s)", "timestamp")
 
 
 class Plotter():
